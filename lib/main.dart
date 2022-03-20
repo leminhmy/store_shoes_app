@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:store_shoes_app/screens/detail_page/detail_page.dart';
 import 'package:store_shoes_app/screens/home_page/home_page.dart';
 import 'package:get/get.dart';
 
