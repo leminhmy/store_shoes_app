@@ -81,56 +81,62 @@ class InfoProduct extends StatelessWidget {
             ],
           ),
         ),
+
+        Padding(
+          padding: EdgeInsets.only(left: Dimensions.width20),
+          child: BigText(text: "Size"),
+        ),
+        SizedBox(
+          height: Dimensions.height5,
+        ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Padding(
             padding: EdgeInsets.only(left: Dimensions.width15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                BigText(text: "Size"),
-                SizedBox(
-                  height: Dimensions.height5,
-                ),
-                Row(
-                  children: List.generate(8, (index) =>
-                      Padding(
-                        padding: EdgeInsets.only(right: Dimensions.width5),
-                        child: Container(
-                          height: Dimensions.height50,
-                          width: Dimensions.width50,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(Dimensions.radius40),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.textColor,
-                                  spreadRadius: 1,
-                                  offset: Offset(0, 0),
-                                  blurRadius: 2,
-                                )
-                              ],
-                              border: Border.all(
-                                color:  AppColors.textColor,
-                                width: 1,
-                              )
-                          ),
-                          child: Center(
-                            child: BigText(text: "10",
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: Dimensions.font20,),
-                          ),
-                        ),
-                      )),
-                ),
-              ],
+            child: Row(
+              children: List.generate(8, (index) =>
+                  Padding(
+                    padding: EdgeInsets.only(right: Dimensions.width5),
+                    child: Container(
+                      height: Dimensions.height50,
+                      width: Dimensions.width50,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(Dimensions.radius40),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.textColor,
+                              spreadRadius: 1,
+                              offset: Offset(0, 0),
+                              blurRadius: 2,
+                            )
+                          ],
+                          border: Border.all(
+                            color:  AppColors.textColor,
+                            width: 1,
+                          )
+                      ),
+                      child: Center(
+                        child: BigText(text: "10",
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: Dimensions.font20,),
+                      ),
+                    ),
+                  )),
             ),
           ),
         ),
         SizedBox(
           height: Dimensions.height10,
         ),
+        Padding(
+          padding: EdgeInsets.only(left: Dimensions.width20),
+          child: BigText(text: "Color"),
+        ),
+        SizedBox(
+          height: Dimensions.height5,
+        ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Padding(
@@ -138,10 +144,7 @@ class InfoProduct extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BigText(text: "Color"),
-                SizedBox(
-                  height: Dimensions.height5,
-                ),
+
                 Row(
                   children: List.generate(8, (index) =>
                       Padding(

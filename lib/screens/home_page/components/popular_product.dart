@@ -40,9 +40,10 @@ class PopularProducts extends StatelessWidget {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(Dimensions.radius10),
+                            color: AppColors.greenColor,
+                              borderRadius: BorderRadius.circular(Dimensions.radius30),
                               image: DecorationImage(
-                                  image: AssetImage("assets/images/a2.jpg"),
+                                  image: AssetImage("assets/images/a2.png"),
                                   fit: BoxFit.cover),
 
                           ),

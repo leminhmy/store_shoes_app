@@ -105,10 +105,10 @@ class _SliderBannerState extends State<SliderBanner> {
                   height: Dimensions.pageViewContainer,
                   decoration: BoxDecoration(
                       color:
-                          index.isEven ? Color(0xFF69c5df) : Color(0xFF9294cc),
+                          index.isEven ? AppColors.greenColor : Color(0xFF9294cc),
                       image: DecorationImage(
                           // image: NetworkImage(AppConstants.BASE_URL+AppConstants.UPLOAD_URL+popularProduct.img!),
-                          image: AssetImage("assets/images/a2.jpg"),
+                          image: AssetImage("assets/images/a2.png"),
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(
                           Radius.circular(Dimensions.radius15))),

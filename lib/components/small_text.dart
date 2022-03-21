@@ -17,6 +17,8 @@ class SmallText extends StatelessWidget {
     return Text(text,style: TextStyle(
       color: color==Colors.grey?AppColors.textColor:color,
       fontSize: fontSize==16?Dimensions.font16:fontSize,
-    ));
+      overflow: TextOverflow.clip,
+    ),
+    );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:store_shoes_app/components/big_text.dart';
+import 'package:store_shoes_app/components/border_radius_widget.dart';
 
 import '../../../utils/colors.dart';
 import '../../../utils/dimensions.dart';
@@ -16,25 +18,34 @@ class ImageBanner extends StatelessWidget {
         alignment: Alignment.topCenter,
         child: Stack(
           children: [
-            Container(
+            SizedBox(
               height: Dimensions.height50*7,
-              decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(Dimensions.radius40*3)),
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/a2.png"),
-                    fit: BoxFit.contain,
+              child: PageView.builder(
+                physics: const BouncingScrollPhysics(),
+                  itemCount: 5,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index){
+                return Container(
+                  margin: EdgeInsets.only(right: Dimensions.width5),
+                  decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(Dimensions.radius40*3)),
+                      image: DecorationImage(
+                        image: AssetImage("assets/images/a2.png"),
+                        fit: BoxFit.contain,
 
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(0, 10),
+                          spreadRadius: -3,
+                          blurRadius: 15,
+                        )
+                      ]
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, 10),
-                      spreadRadius: -3,
-                      blurRadius: 15,
-                    )
-                  ]
-              ),
+                );
+              }),
             ),
             Align(
               alignment: Alignment.bottomRight,
@@ -49,7 +60,35 @@ class ImageBanner extends StatelessWidget {
 
                 ),
               ),
-            )
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                margin: EdgeInsets.only(left: Dimensions.width20),
+                padding: EdgeInsets.symmetric(vertical: Dimensions.height5,horizontal: Dimensions.width15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(Dimensions.radius10),
+                  border: Border.all(
+                    color: Colors.green,
+                    width: 1,
+                  )
+                ),
+                child: BigText(text: "Page: 1/5",fontWeight: FontWeight.bold,),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: Dimensions.height20,horizontal: Dimensions.width20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    BorderRadiusWidget(widget: Icon(Icons.arrow_back_ios_outlined,color: Colors.white,)),
+                    BorderRadiusWidget(widget: Icon(Icons.shopping_cart_outlined,color: Colors.white,)),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
