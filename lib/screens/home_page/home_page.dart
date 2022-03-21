@@ -20,6 +20,7 @@ class HomePage extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.only(top: Dimensions.height30),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppBarHome(),
               SizedBox(

@@ -33,14 +33,12 @@ class PopularProducts extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.only(topRight: Radius.circular(Dimensions.radius20)),
                 child: Container(
-                  color: Colors.green,
                   height: Dimensions.height50*5,
                   child: Align(
                     alignment: Alignment.topCenter,
                     child: Stack(
                       children: [
                         Container(
-                          margin: EdgeInsets.all(10),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(Dimensions.radius10),
                               image: DecorationImage(
