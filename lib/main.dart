@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:store_shoes_app/screens/auth/sign_in_page.dart';
+import 'package:store_shoes_app/screens/cart_page/cart_page.dart';
 import 'package:store_shoes_app/screens/detail_page/detail_page.dart';
-import 'package:store_shoes_app/screens/home_page/home_page.dart';
+import 'package:store_shoes_app/screens/home_page/components/home_page.dart';
 import 'package:get/get.dart';
+import 'package:store_shoes_app/screens/home_page/main_home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const DetailPage(),
+      home: const MainHomePage(),
     );
   }
 }

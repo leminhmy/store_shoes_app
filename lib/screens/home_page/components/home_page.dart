@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:store_shoes_app/utils/colors.dart';
 import 'package:store_shoes_app/utils/dimensions.dart';
 
-import '../../components/big_text.dart';
-import '../../components/icon_and_text.dart';
-import '../../components/small_text.dart';
-import 'components/app_bar_home.dart';
-import 'components/category.dart';
-import 'components/popular_product.dart';
-import 'components/slider_banner.dart';
+import '../../../components/big_text.dart';
+import '../../../components/icon_and_text.dart';
+import '../../../components/small_text.dart';
+import 'app_bar_home.dart';
+import 'category.dart';
+import 'popular_product.dart';
+import 'slider_banner.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);

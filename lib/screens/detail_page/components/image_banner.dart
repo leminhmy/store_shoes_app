@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:store_shoes_app/components/big_text.dart';
 import 'package:store_shoes_app/components/border_radius_widget.dart';
+import 'package:store_shoes_app/screens/home_page/main_home_page.dart';
 
 import '../../../utils/colors.dart';
 import '../../../utils/dimensions.dart';
+import 'package:get/get.dart';
 
 class ImageBanner extends StatelessWidget {
   const ImageBanner({
@@ -83,7 +85,11 @@ class ImageBanner extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    BorderRadiusWidget(widget: Icon(Icons.arrow_back_ios_outlined,color: Colors.white,)),
+                    GestureDetector(
+                      onTap: (){
+                        Get.to(()=> MainHomePage());
+                      },
+                        child: BorderRadiusWidget(widget: Icon(Icons.arrow_back_ios_outlined,color: Colors.white,))),
                     BorderRadiusWidget(widget: Icon(Icons.shopping_cart_outlined,color: Colors.white,)),
                   ],
                 ),
