@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:store_shoes_app/screens/auth/sign_up_page.dart';
 
 import '../../components/app_text_field.dart';
+import '../../components/base/show_custom_snackbar.dart';
 import '../../components/big_text.dart';
 import '../../components/button_border_radius.dart';
+import '../../controller/auth_controller.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import 'package:get/get.dart';
@@ -18,149 +20,182 @@ class SignInPage extends StatelessWidget {
     var emailController = TextEditingController();
     var passwordController = TextEditingController();
 
+    void _login(AuthController authController) {
+      String email = emailController.text.trim();
+      String password = passwordController.text.trim();
+
+
+      if (email.isEmpty) {
+        showCustomSnackBar("Type in your email address",
+            title: "Email address");
+      } else if (!GetUtils.isEmail(email)) {
+        showCustomSnackBar("Type in a valid email address",
+            title: "Valid email address");
+      } else if (password.isEmpty) {
+        showCustomSnackBar("Type in your password", title: "Password");
+      } else if (password.length < 6) {
+        showCustomSnackBar("Password can not be less than six character",
+            title: "Password");
+      } else {
+        authController.login(email, password).then((status){
+          if(status.isSuccess){
+            // Get.toNamed(RouteHelper.getInitial());
+            print("Login success");
+          }else{
+            showCustomSnackBar(status.message);
+          }
+        });
+      }
+    }
+
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: EdgeInsets.symmetric(vertical: Dimensions.height20),
-              height: Dimensions.screenHeight * 0.25,
-              child: Center(
-                child: Container(
-                  height: 200,
-                  width: 250,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Dimensions.radius20),
-                    image: DecorationImage(
-                      image: AssetImage("assets/images/a2.png"),
-                      fit: BoxFit.contain,
-                    )
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.width20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  BigText(
-                    text: "Hello",
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: Dimensions.font26 * 2.5,
-                  ),
-                  SizedBox(
-                    height: Dimensions.height5,
-                  ),
-                  RichText(
-                      text: TextSpan(
-                          text: "Sign into your account",
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                            fontSize: Dimensions.font20,
-                          ))),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: Dimensions.height30,
-            ),
-            //input signIn
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+      body: GetBuilder<AuthController>(
+        builder: (authController) {
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppTextField(
-                  textFieldController: emailController,
-                  hintText: "Email",
-                  prefixIcon: Icons.email,
-                  colorIcon: AppColors.mainColor,
-                ),
-                SizedBox(
-                  height: Dimensions.height20,
-                ),
-                AppTextField(
-                  isObscure: true,
-                  textFieldController: passwordController,
-                  hintText: "Password",
-                  prefixIcon: Icons.email,
-                  colorIcon: AppColors.mainColor,
-                ),
-                SizedBox(
-                  height: Dimensions.height20,
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: Dimensions.height20),
+                  height: Dimensions.screenHeight * 0.25,
+                  child: Center(
+                    child: Container(
+                      height: 200,
+                      width: 250,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(Dimensions.radius20),
+                        image: DecorationImage(
+                          image: AssetImage("assets/images/a2.png"),
+                          fit: BoxFit.contain,
+                        )
+                      ),
+                    ),
+                  ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: Dimensions.width20),
-                  child: RichText(
-                      text: TextSpan(
-                          text: "Sign into your account",
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                            fontSize: Dimensions.font20,
-                          ))),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: Dimensions.screenHeight * 0.05,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: (){
-                      },
-                      child: ButtonBorderRadius(
-                        widget: Container(
-                          margin: EdgeInsets.symmetric(horizontal: Dimensions.width20),
-                          child: BigText(
-                              text: "Sign In",
-                              color: Colors.white,
-                              fontSize: Dimensions.font26),
-                        ),
-                        colorBackground: AppColors.mainColor,
-                        borderRadius: Dimensions.radius20 * 1.3,
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.width20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BigText(
+                        text: "Hello",
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: Dimensions.font26 * 2.5,
                       ),
+                      SizedBox(
+                        height: Dimensions.height5,
+                      ),
+                      RichText(
+                          text: TextSpan(
+                              text: "Sign into your account",
+                              style: TextStyle(
+                                color: Colors.grey[500],
+                                fontSize: Dimensions.font20,
+                              ))),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: Dimensions.height30,
+                ),
+                //input signIn
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    AppTextField(
+                      textFieldController: emailController,
+                      hintText: "Email",
+                      prefixIcon: Icons.email,
+                      colorIcon: AppColors.mainColor,
                     ),
                     SizedBox(
-                      height: Dimensions.screenHeight * 0.05,
+                      height: Dimensions.height20,
                     ),
-                    RichText(
-                      text: TextSpan(
-                          text: "Don't have an ccount?",
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                            fontSize: Dimensions.font20,
-                          ),
-                          children: [
-                            TextSpan(
-                              recognizer: TapGestureRecognizer()..onTap=()=>Get.to(()=>SignUpPage(),transition: Transition.fade),
-                              text: "Create",
+                    AppTextField(
+                      isObscure: true,
+                      textFieldController: passwordController,
+                      hintText: "Password",
+                      prefixIcon: Icons.email,
+                      colorIcon: AppColors.mainColor,
+                    ),
+                    SizedBox(
+                      height: Dimensions.height20,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: Dimensions.width20),
+                      child: RichText(
+                          text: TextSpan(
+                              text: "Sign into your account",
                               style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: Dimensions.font20,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            )
-                          ]
-                      ),
-
+                                color: Colors.grey[500],
+                                fontSize: Dimensions.font20,
+                              ))),
                     ),
+                  ],
+                ),
+                SizedBox(
+                  height: Dimensions.screenHeight * 0.05,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        GestureDetector(
+                          onTap: (){
+                            _login(authController);
+                          },
+                          child: ButtonBorderRadius(
+                            widget: Container(
+                              margin: EdgeInsets.symmetric(horizontal: Dimensions.width20),
+                              child: BigText(
+                                  text: "Sign In",
+                                  color: Colors.white,
+                                  fontSize: Dimensions.font26),
+                            ),
+                            colorBackground: AppColors.mainColor,
+                            borderRadius: Dimensions.radius20 * 1.3,
+                          ),
+                        ),
+                        SizedBox(
+                          height: Dimensions.screenHeight * 0.05,
+                        ),
+                        RichText(
+                          text: TextSpan(
+                              text: "Don't have an ccount?",
+                              style: TextStyle(
+                                color: Colors.grey[500],
+                                fontSize: Dimensions.font20,
+                              ),
+                              children: [
+                                TextSpan(
+                                  recognizer: TapGestureRecognizer()..onTap=()=>Get.to(()=>SignUpPage(),transition: Transition.fade),
+                                  text: "Create",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: Dimensions.font20,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                )
+                              ]
+                          ),
+
+                        ),
+
+                      ],
+                    ),
+
 
                   ],
                 ),
 
-
               ],
             ),
-
-          ],
-        ),
+          );
+        }
       ),
     );
   }

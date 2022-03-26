@@ -29,10 +29,10 @@ class LeatherProductController extends GetxController{
 
     }
     
-    _leatherProductList.forEach((element) {
-      var testList = [];
-      testList.add(jsonEncode(element));
-      print(testList);
-    });
+    // _leatherProductList.forEach((element) {
+    //   var testList = [];
+    //   testList.add(jsonEncode(element));
+    //   print(testList);
+    // });
   }
 }
