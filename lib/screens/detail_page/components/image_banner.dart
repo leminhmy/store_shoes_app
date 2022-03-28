@@ -3,6 +3,7 @@ import 'package:store_shoes_app/components/big_text.dart';
 import 'package:store_shoes_app/components/border_radius_widget.dart';
 import 'package:store_shoes_app/screens/home_page/main_home_page.dart';
 
+import '../../../routes/route_helper.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/dimensions.dart';
 import 'package:get/get.dart';
@@ -90,7 +91,11 @@ class ImageBanner extends StatelessWidget {
                         Get.to(()=> MainHomePage());
                       },
                         child: BorderRadiusWidget(widget: Icon(Icons.arrow_back_ios_outlined,color: Colors.white,))),
-                    BorderRadiusWidget(widget: Icon(Icons.shopping_cart_outlined,color: Colors.white,)),
+                    GestureDetector(
+                      onTap: (){
+                        Get.toNamed(RouteHelper.cartPage);
+                      },
+                        child: BorderRadiusWidget(widget: Icon(Icons.shopping_cart_outlined,color: Colors.white,))),
                   ],
                 ),
               ),

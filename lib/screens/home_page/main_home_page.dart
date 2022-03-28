@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:store_shoes_app/screens/account_page/account_page.dart';
 import 'package:store_shoes_app/screens/auth/sign_in_page.dart';
@@ -23,7 +22,6 @@ class _MainHomePageState extends State<MainHomePage> {
     Container(child: Text("Cart History"),),
     AccountPage(),
   ];
-
 
   void onTapNav(int index) {
     setState(() {

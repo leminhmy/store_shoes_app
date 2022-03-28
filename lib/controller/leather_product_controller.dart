@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:store_shoes_app/data/repository/leather_shoes_prouct_repo.dart';
 
-import '../models/leather_product.dart';
+import '../models/product.dart';
 
 class LeatherProductController extends GetxController{
   final LeatherShoesProductRepo leatherShoesProductRepo;

@@ -4,7 +4,8 @@ class AppConstants{
 
   static const String BASE_URL = "http://smallshop.dev.com/";
   static const String LEATHER_PRODUCT_URI = "api/v1/products/leather";
-  static const String RECOMMENDED_PRODUCT_URI = "api/v1/products/recommended";
+  static const String SHOES_PRODUCT_URI = "api/v1/products/shoes";
+  static const String SHOES_TYPE_URI = "api/v1/products/shoes-types";
   // static const String DRiNKS_URI = "api/v1/products/drinks";
   static const String UPLOAD_URL = "uploads/";
 

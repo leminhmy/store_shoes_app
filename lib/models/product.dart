@@ -30,6 +30,7 @@ class ProductsModel{
   int? id;
   String? name;
   String? subTitle;
+  int? price;
   int? typeId;
   String? description;
   String? img;
@@ -40,6 +41,7 @@ class ProductsModel{
     this.id,
     this.name,
     this.subTitle,
+    this.price,
     this.typeId,
     this.description,
     this.img,
@@ -52,6 +54,7 @@ class ProductsModel{
     id = json['id'];
     name = json['name'];
     subTitle = json['sub_title'];
+    price = json['price'];
     typeId = json['type_id'];
     description = json['description'];
     img = json['img'];
@@ -65,6 +68,7 @@ class ProductsModel{
       "id": this.id,
       "name": this.name,
       "subTitle": this.subTitle,
+      "price": this.price,
       "typeId": this.typeId,
       "description": this.description,
       "createdAt": this.createdAt,

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:store_shoes_app/controller/shoes_controller.dart';
+import 'package:store_shoes_app/models/product.dart';
+import 'package:store_shoes_app/utils/app_contants.dart';
 
 import '../../../components/big_text.dart';
 import '../../../components/small_text.dart';
@@ -10,8 +14,10 @@ import '../../detail_page/detail_page.dart';
 
 class PopularProducts extends StatelessWidget {
   const PopularProducts({
-    Key? key,
+    Key? key, required this.shoesProduct,
   }) : super(key: key);
+
+  final List<ProductsModel> shoesProduct;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +36,7 @@ class PopularProducts extends StatelessWidget {
           SizedBox(
             height: Dimensions.height10,
           ),
-          ...List.generate(5, (index) {
+          ...List.generate(shoesProduct.length, (index) {
             return GestureDetector(
               onTap: (){
                 Get.to(()=> DetailPage());
@@ -48,10 +54,10 @@ class PopularProducts extends StatelessWidget {
                           Container(
                             decoration: BoxDecoration(
                               color: AppColors.greenColor,
-                                borderRadius: BorderRadius.circular(Dimensions.radius30),
-                                image: DecorationImage(
-                                    image: AssetImage("assets/images/a2.png"),
-                                    fit: BoxFit.cover),
+                              borderRadius: BorderRadius.circular(Dimensions.radius30),
+                              image: DecorationImage(
+                                  image: NetworkImage(AppConstants.BASE_URL+AppConstants.UPLOAD_URL+shoesProduct[index].img!),
+                                  fit: BoxFit.cover),
 
                             ),
                           ),
@@ -75,10 +81,10 @@ class PopularProducts extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       BigText(
-                                          text: "Nike AdaptBB",
+                                          text: shoesProduct[index].name!,
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold),
-                                      SmallText(text: "Man running Shoes",color: Colors.white,),
+                                      SmallText(text: shoesProduct[index].subTitle??"None",color: Colors.white,),
                                     ],
                                   ),
                                   Column(
@@ -88,7 +94,9 @@ class PopularProducts extends StatelessWidget {
                                         decoration: TextDecoration.lineThrough,
                                         decorationColor: Colors.red,
                                       ),),
-                                      BigText(text: "Price: 150.000",color: Colors.red,fontWeight: FontWeight.bold,fontSize: Dimensions.font20,),
+                                      BigText(text: NumberFormat.currency(
+                                          locale: 'vi',symbol: 'đ', decimalDigits: 0
+                                      ).format(shoesProduct[index].price!),color: Colors.red,fontWeight: FontWeight.bold,fontSize: Dimensions.font20,),
                                     ],
                                   ),
                                 ],
