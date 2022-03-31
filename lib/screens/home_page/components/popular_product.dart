@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:store_shoes_app/components/base/app_variable.dart';
 import 'package:store_shoes_app/controller/shoes_controller.dart';
 import 'package:store_shoes_app/models/product.dart';
+import 'package:store_shoes_app/routes/route_helper.dart';
 import 'package:store_shoes_app/utils/app_contants.dart';
 
 import '../../../components/big_text.dart';
@@ -17,7 +19,7 @@ class PopularProducts extends StatelessWidget {
     Key? key, required this.shoesProduct,
   }) : super(key: key);
 
-  final List<ProductsModel> shoesProduct;
+  final List<dynamic> shoesProduct;
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +41,13 @@ class PopularProducts extends StatelessWidget {
           ...List.generate(shoesProduct.length, (index) {
             return GestureDetector(
               onTap: (){
-                Get.to(()=> DetailPage());
+                Get.toNamed(RouteHelper.getShoesDetail(index, "home"));
               },
               child: Padding(
                 padding: EdgeInsets.only(bottom: Dimensions.height20),
                 child: ClipRRect(
                   borderRadius: BorderRadius.only(topRight: Radius.circular(Dimensions.radius20)),
-                  child: Container(
+                  child: SizedBox(
                     height: Dimensions.height50*5,
                     child: Align(
                       alignment: Alignment.topCenter,
@@ -73,7 +75,7 @@ class PopularProducts extends StatelessWidget {
                                 borderRadius:
                                 BorderRadius.circular(Dimensions.radius10),
                               ),
-                              height: 50,
+                              height: Dimensions.height50,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -94,9 +96,7 @@ class PopularProducts extends StatelessWidget {
                                         decoration: TextDecoration.lineThrough,
                                         decorationColor: Colors.red,
                                       ),),
-                                      BigText(text: NumberFormat.currency(
-                                          locale: 'vi',symbol: 'đ', decimalDigits: 0
-                                      ).format(shoesProduct[index].price!),color: Colors.red,fontWeight: FontWeight.bold,fontSize: Dimensions.font20,),
+                                      BigText(text: AppVariable().numberFormatPriceVi(shoesProduct[index].price!),color: Colors.red,fontWeight: FontWeight.bold,fontSize: Dimensions.font20,),
                                     ],
                                   ),
                                 ],

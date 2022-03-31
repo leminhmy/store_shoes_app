@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:store_shoes_app/components/base/app_variable.dart';
 
 import '../../../components/big_text.dart';
 import '../../../components/small_text.dart';
+import '../../../models/product.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/dimensions.dart';
 
 class InfoProduct extends StatelessWidget {
   const InfoProduct({
-    Key? key,
+    Key? key, required this.shoesProduct,
   }) : super(key: key);
+
+  final ProductsModel shoesProduct;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +25,7 @@ class InfoProduct extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               BigText(
-                text: "Nike Shoes Product",
+                text: shoesProduct.name!,
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: Dimensions.font26,
@@ -60,7 +64,7 @@ class InfoProduct extends StatelessWidget {
                     ),
                     child: Center(child: Row(
                       children: [
-                        BigText(text: "199.999đ",
+                        BigText(text: AppVariable().numberFormatPriceVi(shoesProduct.price!),
                           fontSize: Dimensions.font20,
                           fontWeight: FontWeight.bold,),
                       ],
@@ -73,7 +77,7 @@ class InfoProduct extends StatelessWidget {
               ),
               BigText(text: "Description"),
               SmallText(
-                  text: "one of a pair of coverings for your feet, usually made of a strong material such as leather, with a thick leather or plastic sole (= base) and usually a heel"),
+                  text: shoesProduct.description!),
               SizedBox(
                 height: Dimensions.height10,
               ),

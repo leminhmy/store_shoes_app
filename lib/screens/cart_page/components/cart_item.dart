@@ -3,14 +3,18 @@ import 'package:get/get.dart';
 
 import '../../../components/big_text.dart';
 import '../../../components/small_text.dart';
+import '../../../controller/cart_controller.dart';
+import '../../../models/cart_model.dart';
+import '../../../utils/app_contants.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/dimensions.dart';
 
 class CartItem extends StatelessWidget {
   const CartItem({
-    Key? key,
+    Key? key, required this.cartModel,
   }) : super(key: key);
 
+  final CartModel cartModel;
 
   @override
   Widget build(BuildContext context) {
@@ -21,17 +25,15 @@ class CartItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           //image product
-          Container(
-            height: Dimensions.pageViewTextContainer,
-            width: Dimensions.pageViewTextContainer,
-            decoration: BoxDecoration(
-              color: AppColors.greenColor,
-              borderRadius: BorderRadius.circular(Dimensions.radius10),
-              image: DecorationImage(
-                image: AssetImage("assets/images/a2.png"),
-                fit: BoxFit.cover
+          ClipRRect(
+              borderRadius: BorderRadius.all(
+                  Radius.circular(Dimensions.radius20)),
+              child: Image.network(
+                AppConstants.BASE_URL+AppConstants.UPLOAD_URL+cartModel.img!,
+                fit: BoxFit.cover,
+                height: Dimensions.pageViewTextContainer,
+                width: Dimensions.pageViewTextContainer,
               )
-            ),
           ),
           //information product
           Expanded(
@@ -53,46 +55,52 @@ class CartItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BigText(text: "Name Shoes"),
+                  BigText(text: cartModel.name!),
                   SizedBox(height: Dimensions.height5,),
                   SmallText(text: "Spicy"),
                   SizedBox(height: Dimensions.height5,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      BigText(
-                        text: "\$ 19999",
-                        color: AppColors.redColor,
-                      ),
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                            },
-                            child: Icon(
-                              Icons.remove,
-                              color: AppColors.signColor,
+                  GetBuilder<CartController>(
+                      builder: (cartController) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            BigText(
+                              text: "\$ ${cartModel.price!}",
+                              color: AppColors.redColor,
                             ),
-                          ),
-                          SizedBox(
-                            width: Dimensions.width10,
-                          ),
-                          BigText(text: "5"),
-                          SizedBox(
-                            width: Dimensions.width10,
-                          ),
-                          InkWell(
-                            onTap: () {
-                            },
-                            child: Icon(
-                              Icons.add,
-                              color: AppColors.signColor,
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    cartController.addItem(cartModel.product!, -1);
+                                  },
+                                  child: Icon(
+                                    Icons.remove,
+                                    color: AppColors.signColor,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: Dimensions.width10,
+                                ),
+                                BigText(text: cartModel.quantity!.toString()),
+                                SizedBox(
+                                  width: Dimensions.width10,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    cartController.addItem(cartModel.product!, 1);
+                                  },
+                                  child: Icon(
+                                    Icons.add,
+                                    color: AppColors.signColor,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                          ],
+                        );
+                      }
+                  )
                 ],
               ),
             ),

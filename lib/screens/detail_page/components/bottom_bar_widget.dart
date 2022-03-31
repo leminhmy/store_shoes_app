@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:store_shoes_app/controller/shoes_controller.dart';
+import 'package:store_shoes_app/models/product.dart';
 
 import '../../../components/big_text.dart';
 import '../../../components/border_radius_widget.dart';
@@ -7,8 +9,11 @@ import '../../../utils/dimensions.dart';
 
 class BottomBarWidget extends StatelessWidget {
   const BottomBarWidget({
-    Key? key,
+    Key? key, required this.shoesController, required this.productShoesDetail,
   }) : super(key: key);
+
+  final ShoesController shoesController;
+  final ProductsModel productShoesDetail;
 
   @override
   Widget build(BuildContext context) {
@@ -36,19 +41,24 @@ class BottomBarWidget extends StatelessWidget {
             ),
             child: Row(
               children: [
-                BorderRadiusWidget(
-                  colorBackground: AppColors.greenColor,
-                  widget: Icon(
-                    Icons.remove_outlined,
-                    color: Colors.white,
-                    size: Dimensions.font26,
+                InkWell(
+                  onTap: (){
+                    shoesController.setQuantity(false);
+                  },
+                  child: BorderRadiusWidget(
+                    colorBackground: AppColors.greenColor,
+                    widget: Icon(
+                      Icons.remove_outlined,
+                      color: Colors.white,
+                      size: Dimensions.font26,
+                    ),
                   ),
                 ),
                 SizedBox(
                   width: 10,
                 ),
                 BigText(
-                  text: "X4",
+                  text: "x${shoesController.inCarItems.toString()}",
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: Dimensions.font26,
@@ -56,28 +66,39 @@ class BottomBarWidget extends StatelessWidget {
                 SizedBox(
                   width: 10,
                 ),
-                BorderRadiusWidget(
-                  colorBackground: AppColors.greenColor,
-                  widget: Icon(
-                    Icons.add_outlined,
-                    color: Colors.white,
-                    size: Dimensions.font26,
+                InkWell(
+                  onTap: (){
+                    shoesController.setQuantity(true);
+                  },
+                  child: BorderRadiusWidget(
+                    colorBackground: AppColors.greenColor,
+                    widget: Icon(
+                      Icons.add_outlined,
+                      color: Colors.white,
+                      size: Dimensions.font26,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: Dimensions.height10,horizontal: Dimensions.width20),
-            decoration: BoxDecoration(
-              color: Colors.green,
-              borderRadius: BorderRadius.circular(Dimensions.radius20),
-            ),
-            child: BigText(
-              text: "Add to cart",
-              color: Colors.white,
-              fontSize: Dimensions.font26,
-              fontWeight: FontWeight.bold,
+          GestureDetector(
+            onTap: (){
+              shoesController.addItem(productShoesDetail);
+
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: Dimensions.height10,horizontal: Dimensions.width20),
+              decoration: BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.circular(Dimensions.radius20),
+              ),
+              child: BigText(
+                text: "Add to cart",
+                color: Colors.white,
+                fontSize: Dimensions.font26,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           )
         ],

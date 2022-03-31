@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:store_shoes_app/components/base/custom_loader.dart';
 import 'package:store_shoes_app/controller/shoes_controller.dart';
 import 'package:store_shoes_app/utils/colors.dart';
 import 'package:store_shoes_app/utils/dimensions.dart';
@@ -17,7 +18,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.find<ShoesController>().getShoesTypeList();
     Get.find<ShoesController>().getShoesProductList();
     return Scaffold(
       body: GetBuilder<ShoesController>(
@@ -36,11 +36,11 @@ class HomePage extends StatelessWidget {
                   SizedBox(
                     height: Dimensions.height10,
                   ),
-                  Category(shoesType: shoesController.shoesTypeList),
+                  Category(shoesType: shoesController.shoesTypeList, shoesController: shoesController,),
                   SizedBox(
                     height: Dimensions.height10,
                   ),
-                  PopularProducts(shoesProduct: shoesController.shoesProductList,)
+                  shoesController.isLoaded?PopularProducts(shoesProduct: shoesController.listFilterShoes.isEmpty?shoesController.shoesProductList:shoesController.listFilterShoes,):CustomLoader(),
                 ],
               ),
             ),

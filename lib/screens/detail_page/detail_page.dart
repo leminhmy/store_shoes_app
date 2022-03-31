@@ -2,41 +2,61 @@ import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:store_shoes_app/components/base/custom_loader.dart';
 import 'package:store_shoes_app/components/big_text.dart';
 import 'package:store_shoes_app/components/small_text.dart';
+import 'package:store_shoes_app/controller/shoes_controller.dart';
 import 'package:store_shoes_app/screens/detail_page/components/orther_product.dart';
 import 'package:store_shoes_app/utils/colors.dart';
 import 'package:store_shoes_app/utils/dimensions.dart';
 
 import '../../components/border_radius_widget.dart';
+import '../../controller/cart_controller.dart';
 import 'components/bottom_bar_widget.dart';
 import 'components/image_banner.dart';
 import 'components/info_product.dart';
+import 'package:get/get.dart';
 
 class DetailPage extends StatelessWidget {
-  const DetailPage({Key? key}) : super(key: key);
+  DetailPage({Key? key,required this.pageId, required this.page}) : super(key: key);
+  int pageId;
+  final String page;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
+    var shoesDetail;
+    if(Get.find<ShoesController>().listFilterShoes.isEmpty){
+      shoesDetail = Get.find<ShoesController>().shoesProductList[pageId];
+    }
+    else if(Get.find<ShoesController>().listFilterShoes.isNotEmpty){
+      shoesDetail = Get.find<ShoesController>().listFilterShoes[pageId];
+    }
+    Get.find<ShoesController>()
+        .initProduct(shoesDetail, Get.find<CartController>());
+    return GetBuilder<ShoesController>(
+      builder: (shoesController) {
+
+        return Scaffold(
+          body: shoesController.isLoaded?SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ImageBanner(),
+            ImageBanner(shoesProduct: shoesDetail),
             SizedBox(
               height: Dimensions.height10,
             ),
-            InfoProduct(),
+            InfoProduct(shoesProduct: shoesDetail,),
             SizedBox(
               height: Dimensions.height15,
             ),
             OrtherProduct(),
-
           ],
         ),
-      ),
-      bottomNavigationBar: BottomBarWidget(),
+        ):CustomLoader(),
+
+        bottomNavigationBar: BottomBarWidget(shoesController: shoesController, productShoesDetail: shoesDetail,),
+        );
+      }
     );
   }
 }
