@@ -19,6 +19,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.find<ShoesController>().getShoesProductList();
+    Get.find<ShoesController>().getShoesTypeList();
     return Scaffold(
       body: GetBuilder<ShoesController>(
         builder: (shoesController) {

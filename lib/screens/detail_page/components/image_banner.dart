@@ -15,9 +15,10 @@ import 'package:get/get.dart';
 class ImageBanner extends StatelessWidget {
   const ImageBanner({
     Key? key,
-    required this.shoesProduct,
+    required this.shoesProduct, required this.page,
   }) : super(key: key);
 
+  final String page;
   final ProductsModel shoesProduct;
 
   @override
@@ -61,16 +62,20 @@ class ImageBanner extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.bottomRight,
-              child: Container(
-                margin: EdgeInsets.only(right: Dimensions.width20),
-                child: CircleAvatar(
-                  maxRadius: 40,
-                  backgroundColor: AppColors.redColor,
-                  child: Center(
-                    child: Icon(
-                      Icons.favorite_outlined,
-                      color: Colors.white,
-                      size: Dimensions.iconSize26 * 2,
+              child: GestureDetector(
+                onTap: (){
+                },
+                child: Container(
+                  margin: EdgeInsets.only(right: Dimensions.width20),
+                  child: CircleAvatar(
+                    maxRadius: 40,
+                    backgroundColor: AppColors.redColor,
+                    child: Center(
+                      child: Icon(
+                        Icons.favorite_outlined,
+                        color: Colors.white,
+                        size: Dimensions.iconSize26 * 2,
+                      ),
                     ),
                   ),
                 ),
@@ -106,7 +111,11 @@ class ImageBanner extends StatelessWidget {
                   children: [
                     GestureDetector(
                         onTap: () {
-                          Get.to(() => MainHomePage());
+                          if( page == "cartpage"){
+                            Get.toNamed(RouteHelper.getCartPage());
+                          }else{
+                            Get.toNamed(RouteHelper.getInitial());
+                          }
                         },
                         child: BorderRadiusWidget(
                             widget: Icon(

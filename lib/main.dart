@@ -8,6 +8,7 @@ import 'package:store_shoes_app/screens/detail_page/detail_page.dart';
 import 'package:store_shoes_app/screens/home_page/components/home_page.dart';
 import 'package:get/get.dart';
 import 'package:store_shoes_app/screens/home_page/main_home_page.dart';
+import 'controller/cart_controller.dart';
 import 'helper/dependencies.dart' as dep;
 
 Future<void> main() async {
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.find<ShoesController>().getShoesTypeList();
+    Get.find<CartController>().getCartData();
     return GetBuilder<LeatherProductController>(
       builder: (_) {
         Get.find<LeatherProductController>().getLeatherProductList();

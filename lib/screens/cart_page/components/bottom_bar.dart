@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:store_shoes_app/controller/auth_controller.dart';
 import 'package:store_shoes_app/controller/cart_controller.dart';
 
 import '../../../components/big_text.dart';
 import '../../../components/button_border_radius.dart';
+import '../../../routes/route_helper.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/dimensions.dart';
 import 'package:get/get.dart';
@@ -27,7 +29,7 @@ class BottomBarCart extends StatelessWidget {
       ),
       child: GetBuilder<CartController>(
         builder: (cartController) {
-          return Row(
+          return cartController.getItems.length>0?Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               //quantity
@@ -39,6 +41,18 @@ class BottomBarCart extends StatelessWidget {
               //addToCard
               GestureDetector(
                 onTap: (){
+                  if(Get.find<AuthController>().userLoggedIn())
+                    {
+                        print("Logged in?");
+                        cartController.addToHistory();
+
+                    }
+                  else{
+                          print("Not logged in");
+                          Get.toNamed(RouteHelper.getSignInPage());
+
+                  }
+                  // cartController.addToHistory();
                 },
                 child: ButtonBorderRadius(
                   widget: BigText(
@@ -49,7 +63,7 @@ class BottomBarCart extends StatelessWidget {
                 ),
               )
             ],
-          );
+          ):Container();
         }
       ),
     );

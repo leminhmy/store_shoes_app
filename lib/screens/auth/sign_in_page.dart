@@ -8,6 +8,7 @@ import '../../components/base/show_custom_snackbar.dart';
 import '../../components/big_text.dart';
 import '../../components/button_border_radius.dart';
 import '../../controller/auth_controller.dart';
+import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import 'package:get/get.dart';
@@ -26,20 +27,20 @@ class SignInPage extends StatelessWidget {
 
 
       if (email.isEmpty) {
-        showCustomSnackBar("Type in your email address",
-            title: "Email address");
+        showCustomSnackBar("Email Rỗng",
+            title: "Error Email");
       } else if (!GetUtils.isEmail(email)) {
-        showCustomSnackBar("Type in a valid email address",
-            title: "Valid email address");
+        showCustomSnackBar("Email không đúng định dạng",
+            title: "Error Valid Email");
       } else if (password.isEmpty) {
-        showCustomSnackBar("Type in your password", title: "Password");
+        showCustomSnackBar("Password Rỗng", title: "Error Password");
       } else if (password.length < 6) {
-        showCustomSnackBar("Password can not be less than six character",
-            title: "Password");
+        showCustomSnackBar("Password tối thiểu 6 kí tự",
+            title: "Error Valid Passoword ");
       } else {
         authController.login(email, password).then((status){
           if(status.isSuccess){
-            // Get.toNamed(RouteHelper.getInitial());
+            Get.toNamed(RouteHelper.getInitial());
             print("Login success");
           }else{
             showCustomSnackBar(status.message);

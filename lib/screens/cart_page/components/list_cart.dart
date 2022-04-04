@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:store_shoes_app/controller/shoes_controller.dart';
+import 'package:store_shoes_app/routes/route_helper.dart';
 
 import '../../../components/base/no_data_page.dart';
 import '../../../controller/cart_controller.dart';
@@ -23,7 +26,9 @@ class ListCart extends StatelessWidget {
             cartController.getItems.length,
                 (index) =>
                 GestureDetector(
-
+                  onTap: (){
+                    Get.toNamed(RouteHelper.getShoesDetail(_cartList[index].product!.id!, "cartpage"));
+                  },
                     child: CartItem(cartModel: cartController.getItems[index])),
           ),
         ),

@@ -12,7 +12,7 @@ class AuthController extends GetxController implements GetxService{
 
   bool _isLoading = false;
 
-  bool get isLoadding => _isLoading;
+  bool get isLoading => _isLoading;
 
   Future<ResponseModel> registration(SignUpBody signUpBody) async{
     _isLoading = true;

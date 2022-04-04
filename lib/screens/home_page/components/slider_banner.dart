@@ -1,11 +1,17 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:store_shoes_app/controller/shoes_controller.dart';
+import 'package:store_shoes_app/models/product.dart';
 
+import '../../../components/base/app_variable.dart';
 import '../../../components/big_text.dart';
 import '../../../components/icon_and_text.dart';
 import '../../../components/small_text.dart';
+import '../../../routes/route_helper.dart';
+import '../../../utils/app_contants.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/dimensions.dart';
+import 'package:get/get.dart';
 
 class SliderBanner extends StatefulWidget {
   const SliderBanner({
@@ -44,6 +50,7 @@ class _SliderBannerState extends State<SliderBanner> {
 
   @override
   Widget build(BuildContext context) {
+    var shoesProduct = Get.find<ShoesController>().shoesProductList;
     return Column(
       children: [
         SizedBox(
@@ -51,10 +58,10 @@ class _SliderBannerState extends State<SliderBanner> {
           child: PageView.builder(
               controller: pageController,
               scrollDirection: Axis.horizontal,
-              itemCount: 5,
+              itemCount: shoesProduct.length,
               physics: BouncingScrollPhysics(),
               itemBuilder: (context, index) {
-                return _buildSliderBannerCard(index);
+                return _buildSliderBannerCard(index,shoesProduct[index]);
               }),
         ),
         buildDotsIndicator(),
@@ -62,7 +69,7 @@ class _SliderBannerState extends State<SliderBanner> {
     );
   }
 
-  _buildSliderBannerCard(int index) {
+  _buildSliderBannerCard(int index, ProductsModel shoesProduct) {
     height == 0 ? Dimensions.pageViewContainer : height;
     Matrix4 matrix = new Matrix4.identity();
     if (index == _currPageValue.floor()) {
@@ -99,7 +106,7 @@ class _SliderBannerState extends State<SliderBanner> {
               //imageBackground banner
               GestureDetector(
                 onTap: () {
-                  // Get.toNamed(RouteHelper.getPopularFood(index, "Home"));
+                  Get.toNamed(RouteHelper.getShoesDetail(shoesProduct.id!, "Home"));
                 },
                 child: Container(
                   height: Dimensions.pageViewContainer,
@@ -108,7 +115,7 @@ class _SliderBannerState extends State<SliderBanner> {
                           index.isEven ? AppColors.greenColor : Color(0xFF9294cc),
                       image: DecorationImage(
                           // image: NetworkImage(AppConstants.BASE_URL+AppConstants.UPLOAD_URL+popularProduct.img!),
-                          image: AssetImage("assets/images/a2.png"),
+                          image: NetworkImage(AppConstants.BASE_URL+AppConstants.UPLOAD_URL+shoesProduct.img!),
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(
                           Radius.circular(Dimensions.radius15))),
@@ -140,7 +147,7 @@ class _SliderBannerState extends State<SliderBanner> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       BigText(
-                        text: "Giay the thao",
+                        text: shoesProduct.name!,
                         color: AppColors.mainBlackColor,
                       ),
                       Row(
@@ -188,7 +195,7 @@ class _SliderBannerState extends State<SliderBanner> {
                     BorderRadius.all(Radius.circular(Dimensions.radius20)),
                   ),
                   child: Center(
-                    child: BigText(text: "Price: 100.000",color: Colors.white,),
+                    child: BigText(text: AppVariable().numberFormatPriceVi(shoesProduct.price!),color: Colors.white,),
                   ),
                 ),
               ),

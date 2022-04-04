@@ -24,15 +24,11 @@ class DetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var shoesDetail;
-    if(Get.find<ShoesController>().listFilterShoes.isEmpty){
-      shoesDetail = Get.find<ShoesController>().shoesProductList[pageId];
-    }
-    else if(Get.find<ShoesController>().listFilterShoes.isNotEmpty){
-      shoesDetail = Get.find<ShoesController>().listFilterShoes[pageId];
-    }
+    int index = Get.find<ShoesController>().shoesProductList.indexWhere((element) => element.id == pageId);
+    var shoesDetail = Get.find<ShoesController>().shoesProductList[index];
     Get.find<ShoesController>()
         .initProduct(shoesDetail, Get.find<CartController>());
+
     return GetBuilder<ShoesController>(
       builder: (shoesController) {
 
@@ -41,7 +37,7 @@ class DetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ImageBanner(shoesProduct: shoesDetail),
+            ImageBanner(shoesProduct: shoesDetail, page: page,),
             SizedBox(
               height: Dimensions.height10,
             ),

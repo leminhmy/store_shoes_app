@@ -41,7 +41,7 @@ class PopularProducts extends StatelessWidget {
           ...List.generate(shoesProduct.length, (index) {
             return GestureDetector(
               onTap: (){
-                Get.toNamed(RouteHelper.getShoesDetail(index, "home"));
+                Get.toNamed(RouteHelper.getShoesDetail(shoesProduct[index].id!, "home"));
               },
               child: Padding(
                 padding: EdgeInsets.only(bottom: Dimensions.height20),

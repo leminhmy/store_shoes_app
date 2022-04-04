@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:store_shoes_app/controller/shoes_controller.dart';
 
 import '../../../components/big_text.dart';
 import '../../../components/icon_background_border_radius.dart';
+import '../../../routes/route_helper.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/dimensions.dart';
 import 'package:get/get.dart';
@@ -23,7 +25,7 @@ class AppBarAction extends StatelessWidget {
           IconBackgroundBorderRadius(
             icon: Icons.arrow_back_ios_outlined,
             press: () {
-                // Get.toNamed(RouteHelper.initial);
+                Get.toNamed(RouteHelper.initial);
             },
             sizeHeight: Dimensions.height40,
             size: Dimensions.iconSize18,
@@ -35,7 +37,7 @@ class AppBarAction extends StatelessWidget {
               IconBackgroundBorderRadius(
                 icon: Icons.home_outlined,
                 press: () {
-                  // Get.toNamed(RouteHelper.initial);
+                  Get.toNamed(RouteHelper.initial);
                 },
                 sizeHeight: Dimensions.height40,
                 size: Dimensions.iconSize24,
@@ -48,7 +50,6 @@ class AppBarAction extends StatelessWidget {
           IconBackgroundBorderRadius(
             icon: Icons.shopping_cart_outlined,
             press: () {
-
             },
             sizeHeight: Dimensions.height40,
             size: Dimensions.iconSize18,
@@ -68,9 +69,9 @@ class AppBarAction extends StatelessWidget {
                   sizeHeight: 20,
                   press: () {},
                 ),
-                Align(
+                Get.find<ShoesController>().totalItems >= 1?Align(
                     alignment: Alignment.center,
-                    child: BigText(text: "1",color: AppColors.blackColor,fontSize: Dimensions.font12,)),
+                    child: BigText(text: Get.find<ShoesController>().totalItems.toString(),color: AppColors.redColor,fontSize: Dimensions.font12,)):Container(),
               ],
             ),
           )
