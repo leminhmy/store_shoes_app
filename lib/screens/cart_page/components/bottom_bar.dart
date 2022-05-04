@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:store_shoes_app/controller/auth_controller.dart';
 import 'package:store_shoes_app/controller/cart_controller.dart';
+import 'package:store_shoes_app/controller/order_controller.dart';
 
+import '../../../components/base/show_custom_snackbar.dart';
 import '../../../components/big_text.dart';
 import '../../../components/button_border_radius.dart';
 import '../../../routes/route_helper.dart';
@@ -43,16 +47,28 @@ class BottomBarCart extends StatelessWidget {
                 onTap: (){
                   if(Get.find<AuthController>().userLoggedIn())
                     {
-                        print("Logged in?");
-                        cartController.addToHistory();
+                      String address = "hcm-city";
+                      List<Map<String, dynamic>> cart = [];
+                      Get.find<CartController>().getItems.forEach((element) {
+                        Map<String, dynamic> map = {};
+                        map = {"id":element.id,"quantity":element.quantity,"name":element.name,"color":element.color,"size":element.size,"img":element.img};
+                        cart.add(map);
+                      });
+                      Get.find<OrderController>().placeOrder(address, cartController.totalAmount, cart).then((status) {
+                        if(status.isSuccess){
+                          Get.find<CartController>().clear();
+                          showCustomSnackBar("Order Success",isError: false);
+                        }else{
+                          showCustomSnackBar(status.message);
+                        }
+                      });
 
                     }
                   else{
-                          print("Not logged in");
                           Get.toNamed(RouteHelper.getSignInPage());
 
                   }
-                  // cartController.addToHistory();
+
                 },
                 child: ButtonBorderRadius(
                   widget: BigText(

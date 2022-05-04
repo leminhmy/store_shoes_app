@@ -10,6 +10,7 @@ import '../../components/big_text.dart';
 import '../../components/button_border_radius.dart';
 import '../../controller/auth_controller.dart';
 import '../../models/signup_body_model.dart';
+import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 
@@ -55,7 +56,7 @@ class SignUpPage extends StatelessWidget {
         authController.registration(signUpBody).then((status){
           if(status.isSuccess){
             print("Success registration");
-            // Get.offNamed(RouteHelper.getInitial());
+            Get.offNamed(RouteHelper.getInitial());
           }else{
             showCustomSnackBar(status.message);
           }

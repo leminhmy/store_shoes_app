@@ -31,9 +31,12 @@ class ProductsModel{
   String? name;
   String? subTitle;
   int? price;
+  String? color;
+  String? size;
   int? typeId;
   String? description;
   String? img;
+  String? listimg;
   String? createdAt;
   String? updatedAt;
 
@@ -42,8 +45,11 @@ class ProductsModel{
     this.name,
     this.subTitle,
     this.price,
+    this.color,
+    this.size,
     this.typeId,
     this.description,
+    this.listimg,
     this.img,
     this.createdAt,
     this.updatedAt,
@@ -55,9 +61,12 @@ class ProductsModel{
     name = json['name'];
     subTitle = json['sub_title'];
     price = json['price'];
+    color = json['color'];
+    size = json['size'];
     typeId = json['type_id'];
     description = json['description'];
     img = json['img'];
+    listimg = json['listimg'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
 
@@ -69,11 +78,14 @@ class ProductsModel{
       "name": this.name,
       "subTitle": this.subTitle,
       "price": this.price,
+      "color": this.color,
+      "size": this.size,
       "typeId": this.typeId,
       "description": this.description,
       "createdAt": this.createdAt,
       "updatedAt": this.updatedAt,
       "img": this.img,
+      "listimg":this.listimg
     };
   }
 }

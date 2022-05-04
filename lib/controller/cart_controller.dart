@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:store_shoes_app/data/repository/cart_repo.dart';
@@ -29,6 +31,8 @@ class CartController extends GetxController{
           name: value.name,
           price: value.price,
           img: value.img,
+          color: value.color,
+          size: value.size,
           quantity: value.quantity! + quantity,
           isExist: true,
           time: DateTime.now().toString(),
@@ -54,6 +58,8 @@ class CartController extends GetxController{
                 name: value.name,
                 price: value.price,
                 img: value.img,
+                color: value.color,
+                size: value.size,
                 quantity: value.quantity! + 1,
                 isExist: true,
                 time: DateTime.now().toString(),
@@ -72,6 +78,8 @@ class CartController extends GetxController{
                 name: value.name,
                 price: value.price,
                 img: value.img,
+                color: value.color,
+                size: value.size,
                 quantity: value.quantity! + 1,
                 isExist: true,
                 time: DateTime.now().toString(),
@@ -171,6 +179,24 @@ class CartController extends GetxController{
     return _items.entries.map((e) {
       return e.value;
     }).toList();
+
+  }
+
+  List<CartModel> get getItemsTest {
+    List<CartModel> test = [];
+    test = _items.entries.map((e) {
+      return e.value;
+    }).toList();
+
+    test.forEach((element) {
+      var testList = [];
+      testList.add(jsonEncode(element));
+      print(testList);
+    }
+    );
+
+    return test;
+
   }
 
   set setItemsHistory(Map<int, CartModel> setItems){

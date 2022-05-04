@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:store_shoes_app/controller/order_controller.dart';
 
 import 'package:store_shoes_app/screens/auth/sign_up_page.dart';
 
@@ -21,7 +22,7 @@ class SignInPage extends StatelessWidget {
     var emailController = TextEditingController();
     var passwordController = TextEditingController();
 
-    void _login(AuthController authController) {
+    Future<void> _login(AuthController authController) async {
       String email = emailController.text.trim();
       String password = passwordController.text.trim();
 
@@ -38,9 +39,10 @@ class SignInPage extends StatelessWidget {
         showCustomSnackBar("Password tối thiểu 6 kí tự",
             title: "Error Valid Passoword ");
       } else {
-        authController.login(email, password).then((status){
+       await authController.login(email, password).then((status){
           if(status.isSuccess){
             Get.toNamed(RouteHelper.getInitial());
+            Get.find<OrderController>().getOrderList();
             print("Login success");
           }else{
             showCustomSnackBar(status.message);
@@ -146,8 +148,8 @@ class SignInPage extends StatelessWidget {
                     Column(
                       children: [
                         GestureDetector(
-                          onTap: (){
-                            _login(authController);
+                          onTap: ()async{
+                           await _login(authController);
                           },
                           child: ButtonBorderRadius(
                             widget: Container(

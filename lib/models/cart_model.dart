@@ -6,6 +6,8 @@ class CartModel {
   String? name;
   int? price;
   String? img;
+  String? color;
+  int? size;
   int? quantity;
   bool? isExist;
   String? time;
@@ -17,6 +19,8 @@ class CartModel {
         this.name,
         this.price,
         this.img,
+        this.color,
+        this.size,
         this.quantity,
         this.isExist,
         this.time,
@@ -28,6 +32,8 @@ class CartModel {
     name = json['name'];
     price = json['price'];
     img = json['img'];
+    color = json['color'];
+    size = json['size'];
     quantity = json['quantity'];
     isExist = json['isExist'];
     time = json['time'];
@@ -41,6 +47,8 @@ class CartModel {
       "name":this.name,
       "price":this.price,
       "img":this.img,
+      "color":this.color,
+      "size":this.size,
       "quantity":this.quantity,
       "isExist":this.isExist,
       "time":this.time,

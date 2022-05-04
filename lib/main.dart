@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:store_shoes_app/controller/leather_product_controller.dart';
+import 'package:store_shoes_app/controller/order_controller.dart';
 import 'package:store_shoes_app/controller/shoes_controller.dart';
 import 'package:store_shoes_app/routes/route_helper.dart';
 import 'package:store_shoes_app/screens/auth/sign_in_page.dart';
@@ -8,6 +9,7 @@ import 'package:store_shoes_app/screens/detail_page/detail_page.dart';
 import 'package:store_shoes_app/screens/home_page/components/home_page.dart';
 import 'package:get/get.dart';
 import 'package:store_shoes_app/screens/home_page/main_home_page.dart';
+import 'package:store_shoes_app/screens/search_page/search_page.dart';
 import 'controller/cart_controller.dart';
 import 'helper/dependencies.dart' as dep;
 
@@ -34,7 +36,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          // home: const MainHomePage(),
+          // home: const SearchPage(),
           initialRoute: RouteHelper.getInitial(),
           getPages: RouteHelper.routes,
         );

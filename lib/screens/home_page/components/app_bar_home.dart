@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:store_shoes_app/routes/route_helper.dart';
 
 import '../../../components/big_text.dart';
 import '../../../components/small_text.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/dimensions.dart';
+import 'package:get/get.dart';
 
 class AppBarHome extends StatelessWidget {
   const AppBarHome({
@@ -28,18 +30,21 @@ class AppBarHome extends StatelessWidget {
               )
             ],
           ),
-          Container(
-            height: Dimensions.height50,
-            width: Dimensions.width50,
-            padding: EdgeInsets.all(Dimensions.width10),
-            decoration: BoxDecoration(
-              color: AppColors.mainColor,
-              borderRadius: BorderRadius.circular(Dimensions.radius10),
-            ),
-            child: Icon(
-              Icons.search,
-              color: Colors.white,
-              size: Dimensions.iconSize26,
+          GestureDetector(
+            onTap: ()=> Get.toNamed(RouteHelper.getSearchPage()),
+            child: Container(
+              height: Dimensions.height50,
+              width: Dimensions.width50,
+              padding: EdgeInsets.all(Dimensions.width10),
+              decoration: BoxDecoration(
+                color: AppColors.mainColor,
+                borderRadius: BorderRadius.circular(Dimensions.radius10),
+              ),
+              child: Icon(
+                Icons.search,
+                color: Colors.white,
+                size: Dimensions.iconSize26,
+              ),
             ),
           ),
         ],

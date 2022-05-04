@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:store_shoes_app/controller/cart_controller.dart';
 import 'package:store_shoes_app/controller/shoes_controller.dart';
 
 import '../../../components/big_text.dart';
@@ -12,8 +13,10 @@ import '../cart_page.dart';
 
 class AppBarAction extends StatelessWidget {
   const AppBarAction({
-    Key? key,
+    Key? key, required this.page,
   }) : super(key: key);
+
+  final String page;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +28,9 @@ class AppBarAction extends StatelessWidget {
           IconBackgroundBorderRadius(
             icon: Icons.arrow_back_ios_outlined,
             press: () {
+                if(page == "carthistory"){
+                  Get.back();
+                }
                 Get.toNamed(RouteHelper.initial);
             },
             sizeHeight: Dimensions.height40,
@@ -50,6 +56,8 @@ class AppBarAction extends StatelessWidget {
           IconBackgroundBorderRadius(
             icon: Icons.shopping_cart_outlined,
             press: () {
+              Get.find<CartController>().getItemsTest;
+              print("taped");
             },
             sizeHeight: Dimensions.height40,
             size: Dimensions.iconSize18,
@@ -69,9 +77,9 @@ class AppBarAction extends StatelessWidget {
                   sizeHeight: 20,
                   press: () {},
                 ),
-                Get.find<ShoesController>().totalItems >= 1?Align(
+                Align(
                     alignment: Alignment.center,
-                    child: BigText(text: Get.find<ShoesController>().totalItems.toString(),color: AppColors.redColor,fontSize: Dimensions.font12,)):Container(),
+                    child: BigText(text: Get.find<ShoesController>().totalItems >= 1?Get.find<ShoesController>().totalItems.toString():"0",color: AppColors.redColor,fontSize: Dimensions.font12,)),
               ],
             ),
           )

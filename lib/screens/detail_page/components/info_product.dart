@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:store_shoes_app/components/base/app_variable.dart';
+import 'package:store_shoes_app/controller/shoes_controller.dart';
 
 import '../../../components/big_text.dart';
 import '../../../components/small_text.dart';
@@ -9,10 +10,13 @@ import '../../../utils/dimensions.dart';
 
 class InfoProduct extends StatelessWidget {
   const InfoProduct({
-    Key? key, required this.shoesProduct,
+    Key? key, required this.shoesProduct, required this.listSize, required this.listColor, required this.shoesController,
   }) : super(key: key);
 
   final ProductsModel shoesProduct;
+  final List<int> listSize;
+  final List<String> listColor;
+  final ShoesController shoesController;
 
   @override
   Widget build(BuildContext context) {
@@ -98,33 +102,38 @@ class InfoProduct extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.only(left: Dimensions.width15),
             child: Row(
-              children: List.generate(8, (index) =>
-                  Padding(
-                    padding: EdgeInsets.only(right: Dimensions.width5),
-                    child: Container(
-                      height: Dimensions.height50,
-                      width: Dimensions.width50,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(Dimensions.radius40),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.textColor,
-                              spreadRadius: 1,
-                              offset: Offset(0, 0),
-                              blurRadius: 2,
+              children: List.generate(listSize.length, (index) =>
+                  GestureDetector(
+                    onTap: (){
+                      shoesController.changeOptionSize(listSize[index]);
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(right: Dimensions.width5),
+                      child: Container(
+                        height: Dimensions.height50,
+                        width: Dimensions.width50,
+                        decoration: BoxDecoration(
+                            color: listSize[index] == shoesController.optionSize?AppColors.mainColor:Colors.white,
+                            borderRadius: BorderRadius.circular(Dimensions.radius40),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.textColor,
+                                spreadRadius: 1,
+                                offset: Offset(0, 0),
+                                blurRadius: 2,
+                              )
+                            ],
+                            border: Border.all(
+                              color:  AppColors.textColor,
+                              width: 1,
                             )
-                          ],
-                          border: Border.all(
-                            color:  AppColors.textColor,
-                            width: 1,
-                          )
-                      ),
-                      child: Center(
-                        child: BigText(text: "10",
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: Dimensions.font20,),
+                        ),
+                        child: Center(
+                          child: BigText(text: listSize[index].toString(),
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: Dimensions.font20,),
+                        ),
                       ),
                     ),
                   )),
@@ -150,20 +159,29 @@ class InfoProduct extends StatelessWidget {
               children: [
 
                 Row(
-                  children: List.generate(8, (index) =>
-                      Padding(
-                        padding: EdgeInsets.only(right: Dimensions.width10),
-                        child: Container(
-                          height: 80,
-                          width: 80,
-                          decoration: BoxDecoration(
-                              color: AppColors.redColor,
-                              borderRadius: BorderRadius.circular(Dimensions.radius10/2),
-                              image: DecorationImage(
+                  children: List.generate(listColor.length, (index) =>
+                      GestureDetector(
+                        onTap: (){
+                          shoesController.changeOptionColor(listColor[index]);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(right: Dimensions.width10),
+                          child: Container(
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(
+                                color: Color(int.parse(listColor[index])),
+                                border: Border.all(
+                                  color: listColor[index] == shoesController.optionColor? AppColors.mainColor:Colors.transparent,
+                                  width: 5,
+                                ),
+                                borderRadius: BorderRadius.circular(Dimensions.radius10/2),
+                                image: DecorationImage(
 
-                                  image: AssetImage("assets/images/a2.png"),
-                                  fit: BoxFit.contain
-                              )
+                                    image: AssetImage("assets/images/a2.png"),
+                                    fit: BoxFit.contain
+                                )
+                            ),
                           ),
                         ),
                       )),

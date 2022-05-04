@@ -12,18 +12,40 @@ import '../../../utils/colors.dart';
 import '../../../utils/dimensions.dart';
 import 'package:get/get.dart';
 
-class ImageBanner extends StatelessWidget {
+class ImageBanner extends StatefulWidget {
   const ImageBanner({
     Key? key,
-    required this.shoesProduct, required this.page,
+    required this.shoesProduct, required this.page, required this.listImg,
   }) : super(key: key);
 
   final String page;
   final ProductsModel shoesProduct;
+  final List<String> listImg;
+
+  @override
+  State<ImageBanner> createState() => _ImageBannerState();
+}
+
+class _ImageBannerState extends State<ImageBanner> {
+  PageController pageController = PageController();
+  int _currPageValue = 1;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    pageController.addListener(() {
+      _currPageValue = pageController.page!.toInt()+1;
+      setState(() {});
+
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: Dimensions.height50 * 7.8,
       child: Align(
         alignment: Alignment.topCenter,
@@ -32,8 +54,9 @@ class ImageBanner extends StatelessWidget {
             SizedBox(
               height: Dimensions.height50 * 7,
               child: PageView.builder(
+                controller: pageController,
                   physics: const BouncingScrollPhysics(),
-                  itemCount: 5,
+                  itemCount: widget.listImg.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     return Container(
@@ -45,8 +68,8 @@ class ImageBanner extends StatelessWidget {
                                   Radius.circular(Dimensions.radius40 * 3)),
                           image: DecorationImage(
                             image: NetworkImage(AppConstants.BASE_URL +
-                                AppConstants.UPLOAD_URL +
-                                shoesProduct.img!),
+                                AppConstants.UPLOAD_URL +"shoes/"+
+                                widget.listImg[index]),
                             fit: BoxFit.contain,
                           ),
                           boxShadow: [
@@ -95,7 +118,7 @@ class ImageBanner extends StatelessWidget {
                       width: 1,
                     )),
                 child: BigText(
-                  text: "Page: 1/5",
+                  text: "Page: "+_currPageValue.toString()+"/"+widget.listImg.length.toString(),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -111,9 +134,13 @@ class ImageBanner extends StatelessWidget {
                   children: [
                     GestureDetector(
                         onTap: () {
-                          if( page == "cartpage"){
-                            Get.toNamed(RouteHelper.getCartPage());
-                          }else{
+                          if( widget.page == "cartpage"){
+                            Get.toNamed(RouteHelper.getCartPage("cartpage",));
+                          }
+                          else if( widget.page == "carthistory"){
+                            Get.back();
+                          }
+                          else{
                             Get.toNamed(RouteHelper.getInitial());
                           }
                         },
@@ -126,7 +153,7 @@ class ImageBanner extends StatelessWidget {
                       children: [
                         GestureDetector(
                             onTap: () {
-                              Get.toNamed(RouteHelper.cartPage);
+                              Get.toNamed(RouteHelper.getCartPage("cartpage",));
                             },
                             child: BorderRadiusWidget(
                                 widget: Icon(

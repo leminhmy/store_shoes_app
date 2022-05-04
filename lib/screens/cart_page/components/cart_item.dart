@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:store_shoes_app/components/base/show_custom_snackbar.dart';
 
 import '../../../components/big_text.dart';
 import '../../../components/small_text.dart';
@@ -11,10 +12,11 @@ import '../../../utils/dimensions.dart';
 
 class CartItem extends StatelessWidget {
   const CartItem({
-    Key? key, required this.cartModel,
+    Key? key, required this.cartModel, required this.page,
   }) : super(key: key);
 
-  final CartModel cartModel;
+  final dynamic cartModel;
+  final String page;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,15 @@ class CartItem extends StatelessWidget {
                 children: [
                   BigText(text: cartModel.name!),
                   SizedBox(height: Dimensions.height5,),
-                  SmallText(text: "Spicy"),
+                  Row(
+                    children: [
+                      SmallText(text: "Color",color: Colors.black,),
+                      SizedBox(width: Dimensions.height10,),
+                      Icon(Icons.circle,size: Dimensions.iconSize26,color: Color(int.parse(cartModel.color==null?"0xFF000000":cartModel.color!)),),
+                      SizedBox(width: Dimensions.height20,),
+                      SmallText(text: "Size: ${cartModel.size==null?"10":cartModel.size.toString()}",color: Colors.black,),
+                    ],
+                  ),
                   SizedBox(height: Dimensions.height5,),
                   GetBuilder<CartController>(
                       builder: (cartController) {
@@ -72,7 +82,11 @@ class CartItem extends StatelessWidget {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    cartController.addItem(cartModel.product!, -1);
+                                    if(page == "cartpage"){
+                                      cartController.addItem(cartModel.product!, -1);
+                                    }else{
+                                      showCustomSnackBar("Thís is HistoryCart, can't set it");
+                                    }
                                   },
                                   child: Icon(
                                     Icons.remove,
@@ -88,7 +102,11 @@ class CartItem extends StatelessWidget {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    cartController.addItem(cartModel.product!, 1);
+                                    if(page == "cartpage"){
+                                      cartController.addItem(cartModel.product!, 1);
+                                    }else{
+                                      showCustomSnackBar("Thís is HistoryCart, can't set it");
+                                    }
                                   },
                                   child: Icon(
                                     Icons.add,

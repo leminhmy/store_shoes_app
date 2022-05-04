@@ -3,11 +3,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:store_shoes_app/components/base/custom_loader.dart';
+import 'package:store_shoes_app/controller/user_controller.dart';
+import 'package:store_shoes_app/models/product.dart';
 
 import '../../components/base/no_data_page.dart';
 import '../../components/big_text.dart';
 import '../../components/small_text.dart';
+import '../../controller/auth_controller.dart';
 import '../../controller/cart_controller.dart';
+import '../../controller/order_controller.dart';
 import '../../models/cart_model.dart';
 import '../../routes/route_helper.dart';
 import '../../utils/app_contants.dart';
@@ -20,7 +25,8 @@ class CartHistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var getCartHistoryList =
+
+    /*var getCartHistoryList =
         Get.find<CartController>().getCartHistoryList().reversed.toList();
     Map<String, int> cartItemsPerOrder = Map();
 
@@ -43,28 +49,29 @@ class CartHistoryPage extends StatelessWidget {
 
     List<int> itemsPerOrder = cartItemsPerOrderToList();
 
-    var listCounter = 0;
+    var listCounter = 0;*/
+    Get.find<OrderController>().getOrderList();
+    var getCartHistoryList;
 
     Widget timeWidget(int index) {
       var outputDate = DateTime.now().toString();
-      if(index<getCartHistoryList.length)
-        {
           DateTime parseDate = DateFormat("yyyy-MM-dd HH:mm:ss")
-              .parse(getCartHistoryList[listCounter].time!);
+              .parse(getCartHistoryList[index].createdAt!);
           var inputDate = DateTime.parse(parseDate.toString());
           var outputFormat = DateFormat("MM/dd/yyyy hh:mm a");
           outputDate = outputFormat.format(inputDate);
-        }
       return BigText(text: outputDate);
     }
+
 
     return Scaffold(
       body: Column(
         children: [
           HearderAppBar(),
           //ListCart history
-          GetBuilder<CartController>(builder: (_cartController) {
-            return _cartController.getCartHistoryList().length > 0
+          Get.find<AuthController>().userLoggedIn()?(Get.find<OrderController>().order.isNotEmpty?GetBuilder<OrderController>(builder: (_orderController) {
+            getCartHistoryList = _orderController.order;
+            return _orderController.order.isNotEmpty
                 ? Expanded(
                     child: Container(
                       margin: EdgeInsets.only(
@@ -76,7 +83,7 @@ class CartHistoryPage extends StatelessWidget {
                         context: context,
                         child: ListView(
                           children: [
-                            for (int i = 0; i < itemsPerOrder.length; i++)
+                            for (int i = 0; i < getCartHistoryList.length; i++)
                               Container(
                                 height: Dimensions.height30 * 4,
                                 margin: EdgeInsets.only(
@@ -84,7 +91,7 @@ class CartHistoryPage extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    timeWidget(listCounter),
+                                    timeWidget(i),
                                     SizedBox(
                                       height: Dimensions.height10,
                                     ),
@@ -97,11 +104,8 @@ class CartHistoryPage extends StatelessWidget {
                                         Wrap(
                                           direction: Axis.horizontal,
                                           children: List.generate(
-                                              itemsPerOrder[i], (index) {
-                                            if (listCounter <
-                                                getCartHistoryList.length) {
-                                              listCounter++;
-                                            }
+                                              getCartHistoryList[i].orderItems!.length, (index) {
+                                                ProductsModel product = ProductsModel.fromJson(jsonDecode(getCartHistoryList[i].orderItems![index].shoesDetails!));
                                             return index <= 2
                                                 ? Container(
                                                     height:
@@ -122,10 +126,7 @@ class CartHistoryPage extends StatelessWidget {
                                                                     .BASE_URL +
                                                                 AppConstants
                                                                     .UPLOAD_URL +
-                                                                getCartHistoryList[
-                                                                        listCounter -
-                                                                            1]
-                                                                    .img!),
+                                                                product.img!),
                                                             fit: BoxFit.cover)),
                                                   )
                                                 : Container();
@@ -143,14 +144,14 @@ class CartHistoryPage extends StatelessWidget {
                                                   text: "Total",
                                                   color: AppColors.titleColor),
                                               BigText(
-                                                text: itemsPerOrder[i]
+                                                text: getCartHistoryList[i].orderItems!.length
                                                         .toString() +
                                                     " Items",
                                                 color: AppColors.titleColor,
                                               ),
                                               GestureDetector(
                                                 onTap: () {
-                                                  var orderTime =
+                                                  /*var orderTime =
                                                       cartOrderTimeToList();
                                                   Map<int, CartModel>
                                                       moreOrder = {};
@@ -174,7 +175,19 @@ class CartHistoryPage extends StatelessWidget {
                                                   Get.find<CartController>()
                                                       .setItemsHistory = moreOrder;
                                                   Get.toNamed(
-                                                      RouteHelper.cartPage);
+                                                      RouteHelper.cartPage);*/
+
+                                                  // test
+                                                    List<dynamic> cartModelHistory = getCartHistoryList[i].orderItems!;
+
+                                                    Get.toNamed(RouteHelper.getCartPage("carthistory",index: i));
+
+                                                    /*var testList = [];
+                                                    getCartHistoryList[i].orderItems!.forEach((element) {
+                                                      testList.add(jsonEncode(element));
+                                                      print(testList);
+                                                    }
+                                                    );*/
                                                 },
                                                 child: Container(
                                                   padding: EdgeInsets.symmetric(
@@ -217,10 +230,47 @@ class CartHistoryPage extends StatelessWidget {
                     text: "Cart hisotry is empty!",
                     image: "assets/images/empty_box.png",
                   );
-          })
+          }):CustomLoader()):choosseSignin()
         ],
       ),
     );
   }
 }
 
+Widget choosseSignin(){
+  return Container(child: Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: double.maxFinite,
+          height: Dimensions.height20*9,
+          margin: EdgeInsets.only(left: Dimensions.width20,right: Dimensions.width20),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Dimensions.radius20),
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage("assets/images/signintocontinue.png"),
+              )
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            Get.toNamed(RouteHelper.getSignInPage());
+          },
+          child: Container(
+            width: double.maxFinite,
+            height: Dimensions.height20*5,
+            margin: EdgeInsets.only(left: Dimensions.width20,right: Dimensions.width20),
+            decoration: BoxDecoration(
+              color: AppColors.mainColor,
+              borderRadius: BorderRadius.circular(Dimensions.radius20),
+            ),
+            child: Center(child: BigText(text: "Sign in",color: Colors.white,fontSize: Dimensions.font26,)),
+          ),
+        ),
+
+      ],
+    ),
+  ),);
+}

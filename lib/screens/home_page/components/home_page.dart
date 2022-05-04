@@ -8,6 +8,7 @@ import 'package:store_shoes_app/utils/dimensions.dart';
 import '../../../components/big_text.dart';
 import '../../../components/icon_and_text.dart';
 import '../../../components/small_text.dart';
+import '../../../controller/order_controller.dart';
 import 'app_bar_home.dart';
 import 'category.dart';
 import 'popular_product.dart';
@@ -23,6 +24,8 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: GetBuilder<ShoesController>(
         builder: (shoesController) {
+          // shoesController.getShoesProductList();
+          // shoesController.getShoesTypeList();
           return SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.only(top: Dimensions.height30),

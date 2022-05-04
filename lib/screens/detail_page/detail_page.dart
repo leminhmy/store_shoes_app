@@ -1,4 +1,3 @@
-import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,43 +16,87 @@ import 'components/image_banner.dart';
 import 'components/info_product.dart';
 import 'package:get/get.dart';
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends StatefulWidget {
   DetailPage({Key? key,required this.pageId, required this.page}) : super(key: key);
   int pageId;
   final String page;
 
   @override
-  Widget build(BuildContext context) {
-    int index = Get.find<ShoesController>().shoesProductList.indexWhere((element) => element.id == pageId);
-    var shoesDetail = Get.find<ShoesController>().shoesProductList[index];
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+
+  List<String> listSize = [];
+  List<String> listImg = [];
+  List<String> listColor = [];
+  List<int> listSizeInt = [];
+  late int index;
+  var shoesDetail;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    index = Get.find<ShoesController>().shoesProductList.indexWhere((element) => element.id == widget.pageId);
+    shoesDetail = Get.find<ShoesController>().shoesProductList[index];
     Get.find<ShoesController>()
         .initProduct(shoesDetail, Get.find<CartController>());
 
+    String size = Get.find<ShoesController>().shoesProductList[index].size!;
+    String color = Get.find<ShoesController>().shoesProductList[index].color!;
+    String listImgApiBase = Get.find<ShoesController>().shoesProductList[index].listimg!;
+    String listImgApi = listImgApiBase.substring(0,listImgApiBase.length - 1);
+    //change stringSize product to list
+    listSize = (size.split(','));
+    listSizeInt = listSize.map(int.parse).toList();
+
+    //change stringColor product api to list
+    listColor = (color.split(','));
+
+    listImg = (listImgApi.split(','));
+
+
+    Get.find<ShoesController>().setDefaultSizeAndColor(listSizeInt[0],listColor[0]);
+
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+
     return GetBuilder<ShoesController>(
-      builder: (shoesController) {
 
-        return Scaffold(
-          body: shoesController.isLoaded?SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ImageBanner(shoesProduct: shoesDetail, page: page,),
-            SizedBox(
-              height: Dimensions.height10,
-            ),
-            InfoProduct(shoesProduct: shoesDetail,),
-            SizedBox(
-              height: Dimensions.height15,
-            ),
-            OrtherProduct(),
-          ],
-        ),
-        ):CustomLoader(),
+        builder: (shoesController) {
 
-        bottomNavigationBar: BottomBarWidget(shoesController: shoesController, productShoesDetail: shoesDetail,),
-        );
-      }
+          return Scaffold(
+            body: shoesController.isLoaded?SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ImageBanner(shoesProduct: shoesDetail, page: widget.page, listImg: listImg,),
+                  SizedBox(
+                    height: Dimensions.height10,
+                  ),
+                  InfoProduct(shoesProduct: shoesDetail,listColor: listColor,listSize: listSizeInt,shoesController: shoesController,),
+                  SizedBox(
+                    height: Dimensions.height15,
+                  ),
+                  OrtherProduct(),
+                ],
+              ),
+            ):CustomLoader(),
+
+            bottomNavigationBar: BottomBarWidget(shoesController: shoesController, productShoesDetail: shoesDetail,),
+          );
+        }
     );
   }
+
+
 }
+
 

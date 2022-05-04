@@ -4,17 +4,19 @@ import 'components/bottom_bar.dart';
 import 'components/list_cart.dart';
 
 class CartPage extends StatelessWidget {
-  const CartPage({Key? key}) : super(key: key);
+  const CartPage({Key? key, required this.page, required this.index}) : super(key: key);
 
+  final String page;
+  final int index;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
           //Apbar
-          AppBarAction(),
+          AppBarAction(page: page,),
           //listCart
-          ListCart(),
+          ListCart(page: page,index: index),
         ],
       ),
       bottomNavigationBar: BottomBarCart(),
