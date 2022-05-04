@@ -2,21 +2,36 @@ class AppConstants{
   static const String APP_NAME = "DBFood";
   static const int APP_VERSION = 1;
 
-  static const String BASE_URL = "http://leminhmy.dev.com/";
-  static const String POPULAR_PRODUCT_URI = "api/v1/products/popular";
-  static const String RECOMMENDED_PRODUCT_URI = "api/v1/products/recommended";
-  // static const String DRiNKS_URI = "api/v1/products/drinks";
+
+  //product
+  static const String BASE_URL = "http://192.168.1.9/";
   static const String UPLOAD_URL = "uploads/";
+  static const String LEATHER_PRODUCT_URI = "api/v1/products/leather";
+  static const String SHOES_PRODUCT_URI = "api/v1/products/shoes";
+  static const String SHOES_TYPE_URI = "api/v1/products/shoes-types";
+  static const String SHOES_UPDATE = "api/v1/products/update";
+
 
   //auth and user end points
   static const String REGISTRATION_URI = "api/v1/auth/register";
   static const String LOGIN_URI = "api/v1/auth/login";
   static const String USER_INFO_URI = "api/v1/customer/info";
 
+  //order
+  static const String ORDER_URI = "api/v1/order/list";
+  static const String PLACE_ORDER_URI = "api/v1/order/place";
+
+
+  //uploadfile
+  static const String UPLOAD_FILE_URI = "api/v1/products/uploadfile";
+
   static const String TOKEN = "";
   static const String PHONE = "";
   static const String PASSWORD = "";
   static const String CART_LIST = "cart-list";
   static const String CART_HISTORY_LIST = "cart-history-list";
+
+  //delete
+  static const String PRODUCT_DELETE_URL = "api/v1/products/delete";
 
 }
