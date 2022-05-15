@@ -47,6 +47,8 @@ class _ListCartState extends State<ListCart> {
 
     }else if(widget.page == "carthistory"){
       _cartList = Get.find<OrderController>().order[widget.index].orderItems!;
+      // dynamic cartlisttest = Get.find<CartController>().getItems;
+      // printTestObject(cartlisttest);
     }
 
 
@@ -54,10 +56,7 @@ class _ListCartState extends State<ListCart> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CartController>(builder: (cartController) {
-      if(widget.page == "cartpage"){
-        _cartList = cartController.getItems;
 
-      }
       return _cartList.isNotEmpty?Padding(
         padding: const EdgeInsets.all(5),
         child: Column(
@@ -66,12 +65,6 @@ class _ListCartState extends State<ListCart> {
                 (index) =>
                 GestureDetector(
                   onTap: (){
-                    if(widget.page == "cartpage"){
-                      Get.toNamed(RouteHelper.getShoesDetail(_cartList[index].product!.id!, "cartpage"));
-                    }
-                    if(widget.page == "carthistory"){
-                      Get.toNamed(RouteHelper.getShoesDetail(_cartList[index].productId!, "carthistory"));
-                    }
                   },
                     child: CartItem(page: widget.page,cartModel: _cartList[index])),
           ),

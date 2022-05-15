@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:store_shoes_app/controller/shoes_controller.dart';
 import 'package:store_shoes_app/data/repository/cart_repo.dart';
 
 import '../models/cart_model.dart';
@@ -21,7 +22,7 @@ class CartController extends GetxController{
   List<CartModel> storageItems=[];
 
 
-  void addItem(ProductsModel product, int quantity) {
+  void addItem(ProductsModel product, int quantity,{String color = "0xffffffff",int size = 10}) {
     if (_items.containsKey(product.id!)) {
       var totalQuantity = 0;
       _items.update(product.id!, (value) {
@@ -31,8 +32,8 @@ class CartController extends GetxController{
           name: value.name,
           price: value.price,
           img: value.img,
-          color: value.color,
-          size: value.size,
+          color: color,
+          size: size,
           quantity: value.quantity! + quantity,
           isExist: true,
           time: DateTime.now().toString(),
@@ -58,8 +59,8 @@ class CartController extends GetxController{
                 name: value.name,
                 price: value.price,
                 img: value.img,
-                color: value.color,
-                size: value.size,
+                color: color,
+                size: size,
                 quantity: value.quantity! + 1,
                 isExist: true,
                 time: DateTime.now().toString(),
@@ -78,8 +79,8 @@ class CartController extends GetxController{
                 name: value.name,
                 price: value.price,
                 img: value.img,
-                color: value.color,
-                size: value.size,
+                color: color,
+                size: size,
                 quantity: value.quantity! + 1,
                 isExist: true,
                 time: DateTime.now().toString(),
@@ -104,6 +105,8 @@ class CartController extends GetxController{
             name: product.name,
             price: product.price,
             img: product.img,
+            color: color,
+            size: size,
             quantity: quantity,
             isExist: true,
             time: DateTime.now().toString(),
@@ -127,9 +130,12 @@ class CartController extends GetxController{
 
   int get totalItems {
     var totalQuantity = 0;
-    _items.forEach((key, value) {
-      totalQuantity += value.quantity!;
-    });
+    if(_items.isNotEmpty){
+      _items.forEach((key, value) {
+        totalQuantity += value.quantity!;
+      });
+    }
+
     return totalQuantity;
   }
 
@@ -188,12 +194,13 @@ class CartController extends GetxController{
       return e.value;
     }).toList();
 
+    var testList = [];
     test.forEach((element) {
-      var testList = [];
       testList.add(jsonEncode(element));
-      print(testList);
     }
     );
+    print(testList);
+
 
     return test;
 

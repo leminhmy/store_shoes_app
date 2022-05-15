@@ -64,6 +64,7 @@ class _ImageBannerState extends State<ImageBanner> {
                       decoration: BoxDecoration(
                           color: Colors.green,
                           borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(Dimensions.radius10*2),
                               bottomLeft:
                                   Radius.circular(Dimensions.radius40 * 3)),
                           image: DecorationImage(
@@ -127,7 +128,7 @@ class _ImageBannerState extends State<ImageBanner> {
               alignment: Alignment.topCenter,
               child: Container(
                 margin: EdgeInsets.symmetric(
-                    vertical: Dimensions.height20,
+                    vertical: Dimensions.height20*2,
                     horizontal: Dimensions.width20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -149,42 +150,46 @@ class _ImageBannerState extends State<ImageBanner> {
                           Icons.arrow_back_ios_outlined,
                           color: Colors.white,
                         ))),
-                    Stack(
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              Get.toNamed(RouteHelper.getCartPage("cartpage",));
-                            },
-                            child: BorderRadiusWidget(
-                                widget: Icon(
-                              Icons.shopping_cart_outlined,
-                              color: Colors.white,
-                            ))),
-                        Get.find<ShoesController>().totalItems >= 1
-                            ? Positioned(
-                          right: 0,top: 0,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              IconBackgroundBorderRadius(
-                                icon: Icons.circle,
-                                size: 20,
-                                iconColor: Colors.transparent,
-                                backgroundColor: AppColors.redColor,
-                                sizeHeight: 20,
-                                press: () {},
+                    GetBuilder<ShoesController>(
+                      builder: (shoesController) {
+                        return Stack(
+                          children: [
+                            GestureDetector(
+                                onTap: () {
+                                  Get.toNamed(RouteHelper.getCartPage("cartpage",));
+                                },
+                                child: BorderRadiusWidget(
+                                    widget: Icon(
+                                  Icons.shopping_cart_outlined,
+                                  color: Colors.white,
+                                ))),
+                            shoesController.totalItems >= 1
+                                ? Positioned(
+                              right: 0,top: 0,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  IconBackgroundBorderRadius(
+                                    icon: Icons.circle,
+                                    size: 20,
+                                    iconColor: Colors.transparent,
+                                    backgroundColor: AppColors.redColor,
+                                    sizeHeight: 20,
+                                    press: () {},
+                                  ),
+                                  Align(
+                                      alignment: Alignment.center,
+                                      child: BigText(text: Get.find<ShoesController>().totalItems.toString(),color: Colors.white,fontSize: Dimensions.font12,)),
+                                ],
                               ),
-                              Align(
-                                  alignment: Alignment.center,
-                                  child: BigText(text: Get.find<ShoesController>().totalItems.toString(),color: Colors.white,fontSize: Dimensions.font12,)),
-                            ],
-                          ),
-                        )
-                            : Positioned(
-                          right: 0,
-                            top: 0,
-                            child: Container()),
-                      ],
+                            )
+                                : Positioned(
+                              right: 0,
+                                top: 0,
+                                child: Container()),
+                          ],
+                        );
+                      }
                     ),
                   ],
                 ),

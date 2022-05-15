@@ -21,7 +21,7 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var emailController = TextEditingController();
     var passwordController = TextEditingController();
-
+    late BuildContext dialogContext;
     Future<void> _login(AuthController authController) async {
       String email = emailController.text.trim();
       String password = passwordController.text.trim();
@@ -39,12 +39,27 @@ class SignInPage extends StatelessWidget {
         showCustomSnackBar("Password tối thiểu 6 kí tự",
             title: "Error Valid Passoword ");
       } else {
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              dialogContext = context;
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  BigText(text: "Đang login"),
+                ],
+              );
+            });
        await authController.login(email, password).then((status){
           if(status.isSuccess){
+            Navigator.pop(dialogContext);
             Get.toNamed(RouteHelper.getInitial());
             Get.find<OrderController>().getOrderList();
             print("Login success");
           }else{
+            Navigator.pop(dialogContext);
             showCustomSnackBar(status.message);
           }
         });
@@ -65,8 +80,8 @@ class SignInPage extends StatelessWidget {
                   height: Dimensions.screenHeight * 0.25,
                   child: Center(
                     child: Container(
-                      height: 200,
-                      width: 250,
+                      height: Dimensions.height50*4,
+                      width: Dimensions.height50*5,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(Dimensions.radius20),
                         image: DecorationImage(
@@ -149,6 +164,7 @@ class SignInPage extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: ()async{
+
                            await _login(authController);
                           },
                           child: ButtonBorderRadius(

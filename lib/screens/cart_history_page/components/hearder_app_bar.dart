@@ -35,6 +35,8 @@ class HearderAppBar extends StatelessWidget {
             icon: Icons.shopping_cart_outlined,
             press: () {
               Get.toNamed(RouteHelper.getCartPage("cartpage",));
+              // Get.find<CartController>().getItemsTest;
+              // Get.find<CartController>().clear();
             },
             size: Dimensions.width20,
           ),

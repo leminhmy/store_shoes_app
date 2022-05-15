@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:store_shoes_app/components/base/custom_loader.dart';
@@ -17,7 +16,8 @@ import 'components/info_product.dart';
 import 'package:get/get.dart';
 
 class DetailPage extends StatefulWidget {
-  DetailPage({Key? key,required this.pageId, required this.page}) : super(key: key);
+  DetailPage({Key? key, required this.pageId, required this.page})
+      : super(key: key);
   int pageId;
   final String page;
 
@@ -26,7 +26,6 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-
   List<String> listSize = [];
   List<String> listImg = [];
   List<String> listColor = [];
@@ -34,21 +33,21 @@ class _DetailPageState extends State<DetailPage> {
   late int index;
   var shoesDetail;
 
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    index = Get.find<ShoesController>().shoesProductList.indexWhere((element) => element.id == widget.pageId);
+    index = Get.find<ShoesController>()
+        .shoesProductList
+        .indexWhere((element) => element.id == widget.pageId);
     shoesDetail = Get.find<ShoesController>().shoesProductList[index];
-    Get.find<ShoesController>()
-        .initProduct(shoesDetail, Get.find<CartController>());
 
     String size = Get.find<ShoesController>().shoesProductList[index].size!;
     String color = Get.find<ShoesController>().shoesProductList[index].color!;
-    String listImgApiBase = Get.find<ShoesController>().shoesProductList[index].listimg!;
-    String listImgApi = listImgApiBase.substring(0,listImgApiBase.length - 1);
+    String listImgApiBase =
+        Get.find<ShoesController>().shoesProductList[index].listimg!;
+    String listImgApi = listImgApiBase.substring(0, listImgApiBase.length - 1);
     //change stringSize product to list
     listSize = (size.split(','));
     listSizeInt = listSize.map(int.parse).toList();
@@ -58,45 +57,50 @@ class _DetailPageState extends State<DetailPage> {
 
     listImg = (listImgApi.split(','));
 
-
-    Get.find<ShoesController>().setDefaultSizeAndColor(listSizeInt[0],listColor[0]);
-
+    Get.find<ShoesController>()
+        .setDefaultSizeAndColor(listSizeInt[0], listColor[0]);
+    Get.find<ShoesController>()
+        .initProduct(shoesDetail, Get.find<CartController>(),listSizeInt[0],listColor[0]);
 
   }
 
   @override
   Widget build(BuildContext context) {
-
-
-    return GetBuilder<ShoesController>(
-
-        builder: (shoesController) {
-
-          return Scaffold(
-            body: shoesController.isLoaded?SingleChildScrollView(
+    return Scaffold(
+      body: Get.find<ShoesController>().isLoaded
+          ? SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ImageBanner(shoesProduct: shoesDetail, page: widget.page, listImg: listImg,),
+                  ImageBanner(
+                    shoesProduct: shoesDetail,
+                    page: widget.page,
+                    listImg: listImg,
+                  ),
                   SizedBox(
                     height: Dimensions.height10,
                   ),
-                  InfoProduct(shoesProduct: shoesDetail,listColor: listColor,listSize: listSizeInt,shoesController: shoesController,),
+                  InfoProduct(
+                    shoesProduct: shoesDetail,
+                    listColor: listColor,
+                    listSize: listSizeInt,
+                  ),
                   SizedBox(
                     height: Dimensions.height15,
                   ),
                   OrtherProduct(),
                 ],
               ),
-            ):CustomLoader(),
-
-            bottomNavigationBar: BottomBarWidget(shoesController: shoesController, productShoesDetail: shoesDetail,),
+            )
+          : CustomLoader(),
+      bottomNavigationBar: GetBuilder<ShoesController>(
+        builder: (shoesController) {
+          return BottomBarWidget(
+            shoesController: shoesController,
+            productShoesDetail: shoesDetail,
           );
         }
+      ),
     );
   }
-
-
 }
-
-

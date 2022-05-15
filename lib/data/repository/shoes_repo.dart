@@ -24,6 +24,7 @@ class ShoesRepo extends GetxService{
     return await apiClient.postData(AppConstants.SHOES_UPDATE+"/"+idProduct,body);
   }
 
+
   /*//upload file error by getx or by backend data processing error.
   Future<Response> uploadFile(FormData formData)async{
     return await apiClient.postData(AppConstants.UPLOAD_FILE_URI, formData);

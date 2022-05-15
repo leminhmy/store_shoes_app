@@ -55,4 +55,19 @@ class OrderController extends GetxController{
     update();
     return responseModel;
   }
+
+  Future<ResponseModel> updateStatusOrder(int idOrder, int status, dynamic body) async{
+    Response response = await orderRepo.updateStatusProduct(idOrder, status,body);
+    late ResponseModel responseModel;
+    if(response.statusCode == 200)
+    {
+      responseModel = ResponseModel(true, "Success "+response.statusText!);
+    }
+    else{
+      responseModel = ResponseModel(false, "Error "+response.statusText!);
+    }
+    update();
+    return responseModel;
+
+  }
 }

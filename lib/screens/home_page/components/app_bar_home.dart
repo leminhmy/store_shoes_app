@@ -30,22 +30,44 @@ class AppBarHome extends StatelessWidget {
               )
             ],
           ),
-          GestureDetector(
-            onTap: ()=> Get.toNamed(RouteHelper.getSearchPage()),
-            child: Container(
-              height: Dimensions.height50,
-              width: Dimensions.width50,
-              padding: EdgeInsets.all(Dimensions.width10),
-              decoration: BoxDecoration(
-                color: AppColors.mainColor,
-                borderRadius: BorderRadius.circular(Dimensions.radius10),
+          Row(
+            children: [
+              GestureDetector(
+                onTap: ()=> Get.toNamed(RouteHelper.getAddProductPage()),
+                child: Container(
+                  height: Dimensions.height50,
+                  width: Dimensions.width50,
+                  padding: EdgeInsets.all(Dimensions.width10),
+                  decoration: BoxDecoration(
+                    color: AppColors.mainColor,
+                    borderRadius: BorderRadius.circular(Dimensions.radius10),
+                  ),
+                  child: Icon(
+                    Icons.add_outlined,
+                    color: Colors.white,
+                    size: Dimensions.iconSize26,
+                  ),
+                ),
               ),
-              child: Icon(
-                Icons.search,
-                color: Colors.white,
-                size: Dimensions.iconSize26,
+              SizedBox(width: Dimensions.height10,),
+              GestureDetector(
+                onTap: ()=> Get.toNamed(RouteHelper.getSearchPage()),
+                child: Container(
+                  height: Dimensions.height50,
+                  width: Dimensions.width50,
+                  padding: EdgeInsets.all(Dimensions.width10),
+                  decoration: BoxDecoration(
+                    color: AppColors.mainColor,
+                    borderRadius: BorderRadius.circular(Dimensions.radius10),
+                  ),
+                  child: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                    size: Dimensions.iconSize26,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),

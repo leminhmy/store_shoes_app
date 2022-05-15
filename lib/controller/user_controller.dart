@@ -33,8 +33,11 @@ class UserController extends GetxController implements GetxService {
       responseModel = ResponseModel(false, response.statusText!);
     }
 
-    print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+_userModel!.name.toString());
     update();
     return responseModel;
+  }
+
+  int getUserId(){
+    return _userModel!.id;
   }
 }

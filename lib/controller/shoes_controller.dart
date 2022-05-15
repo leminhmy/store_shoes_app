@@ -114,6 +114,8 @@ class ShoesController extends GetxController{
 
   }
 
+
+
   Future<void> getShoesProductList() async{
     Response response = await shoesRepo.getShoesProductList();
     if(response.statusCode == 200)
@@ -122,7 +124,7 @@ class ShoesController extends GetxController{
         _shoesProductList.addAll(Product.fromJson(response.body).products);
         _isLoaded = true;
         update();
-
+        setListFilterShoes();
       }
     else{
       print("get shoes product error");
@@ -153,18 +155,23 @@ class ShoesController extends GetxController{
 
   Future<void> searchShoesProduct(int index)async {
     _listFilterShoes = [];
-    _shoesProductList.forEach((element) {
-      if(element.typeId == index)
+      _shoesProductList.forEach((element) {
+        if(element.typeId == index)
         {
           _listFilterShoes.add(element);
+
         }
-    });
-    indexSelected = index;
+      });
+      indexSelected = index;
+
     update();
   }
 
   void setListFilterShoes(){
     _listFilterShoes = [];
+    _shoesProductList.forEach((element) {
+        _listFilterShoes.add(element);
+    });
     indexSelected = 0;
     update();
   }
@@ -199,12 +206,12 @@ class ShoesController extends GetxController{
       return quantity;
     }
   }
-  void initProduct(ProductsModel product, CartController cart){
+  void initProduct(ProductsModel product, CartController cart,int size, String color){
     _quantity =0;
     _inCartItems = 0;
-    _optionColor = '0xFFFFFFFF';
-    _optionSize = 10;
     _cart = cart;
+    _optionColor = color;
+    _optionSize = size;
     var exist = false;
     exist = _cart.existInCart(product);
 
@@ -213,25 +220,20 @@ class ShoesController extends GetxController{
     int index = list.indexWhere((element) => element.id! == product.id!);
     if(exist){
       _inCartItems = _cart.getQuantity(product);
-      _optionColor = list[index].color!;
-      _optionSize = list[index].size!;
     }
     // print("the quantity in the cart is "+_inCartItems.toString());
   }
 
   void addItem(ProductsModel product){
-    _cart.addItem(product, _quantity);
+    _cart.addItem(product, _quantity,size: _optionSize,color: _optionColor);
     _quantity = 0;
     _inCartItems = _cart.getQuantity(product);
-    _cart.items.forEach((key, value) {
-      value.size = _optionSize;
-      value.color = _optionColor.toString();
-    });
     update();
   }
 
   int get totalItems{
-    return _cart.totalItems;
+    CartController cartController = Get.find<CartController>();
+    return cartController.totalItems;
   }
 
   List<CartModel> get getItems{

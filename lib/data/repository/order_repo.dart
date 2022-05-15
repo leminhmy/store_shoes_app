@@ -16,4 +16,8 @@ class OrderRepo{
   Future<Response> placeOrder(String address, int order_amount, List<Map<String, dynamic>> cart)async{
     return await apiClient.postData(AppConstants.PLACE_ORDER_URI, {"address":address,"order_amount":order_amount,"cart": cart});
   }
+
+  Future<Response> updateStatusProduct(int idOrder,int status,dynamic body)async {
+    return await apiClient.putData(AppConstants.SHOES_UPDATE+"/"+idOrder.toString()+"/status/"+status.toString(),body);
+  }
 }

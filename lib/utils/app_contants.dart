@@ -4,7 +4,7 @@ class AppConstants{
 
 
   //product
-  static const String BASE_URL = "http://192.168.1.9/";
+  static const String BASE_URL = "http://192.168.1.6/";
   static const String UPLOAD_URL = "uploads/";
   static const String LEATHER_PRODUCT_URI = "api/v1/products/leather";
   static const String SHOES_PRODUCT_URI = "api/v1/products/shoes";
@@ -24,12 +24,20 @@ class AppConstants{
 
   //uploadfile
   static const String UPLOAD_FILE_URI = "api/v1/products/uploadfile";
+  static const String ADD_PRODUCT_URI = "api/v1/products/add";
+
+  //messages
+  static const String MESSAGES_GET_URI = "api/v1/messaging/get";
+  static const String MESSAGES_SEND_URI = "api/v1/messaging/send";
 
   static const String TOKEN = "";
   static const String PHONE = "";
   static const String PASSWORD = "";
   static const String CART_LIST = "cart-list";
   static const String CART_HISTORY_LIST = "cart-history-list";
+
+
+
 
   //delete
   static const String PRODUCT_DELETE_URL = "api/v1/products/delete";

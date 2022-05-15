@@ -29,7 +29,7 @@ class _SliderBannerState extends State<SliderBanner> {
   double height = Dimensions.pageViewContainer;
   double index = 0;
   double scaleFactor = 0.8;
-
+  List<ProductsModel> shoesProduct = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -39,6 +39,7 @@ class _SliderBannerState extends State<SliderBanner> {
       });
     });
     super.initState();
+    shoesProduct = Get.find<ShoesController>().shoesProductList;
   }
 
   @override
@@ -50,22 +51,28 @@ class _SliderBannerState extends State<SliderBanner> {
 
   @override
   Widget build(BuildContext context) {
-    var shoesProduct = Get.find<ShoesController>().shoesProductList;
-    return Column(
-      children: [
-        SizedBox(
-          height: Dimensions.pageView,
-          child: PageView.builder(
-              controller: pageController,
-              scrollDirection: Axis.horizontal,
-              itemCount: shoesProduct.length,
-              physics: BouncingScrollPhysics(),
-              itemBuilder: (context, index) {
-                return _buildSliderBannerCard(index,shoesProduct[index]);
-              }),
-        ),
-        buildDotsIndicator(),
-      ],
+
+    return GetBuilder<ShoesController>(
+
+      builder: (shoesController) {
+        shoesProduct = Get.find<ShoesController>().shoesProductList;
+        return Column(
+          children: [
+            SizedBox(
+              height: Dimensions.pageView,
+              child: PageView.builder(
+                  controller: pageController,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: shoesProduct.length,
+                  physics: BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return _buildSliderBannerCard(index,shoesProduct[index]);
+                  }),
+            ),
+            buildDotsIndicator(),
+          ],
+        );
+      }
     );
   }
 
@@ -208,7 +215,7 @@ class _SliderBannerState extends State<SliderBanner> {
 
   buildDotsIndicator() {
     return DotsIndicator(
-      dotsCount: 5,
+      dotsCount: shoesProduct.length > 0?shoesProduct.length:1,
       position: _currPageValue,
       decorator: DotsDecorator(
         activeColor: AppColors.mainColor,

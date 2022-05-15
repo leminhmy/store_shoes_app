@@ -18,7 +18,7 @@ class BottomBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
+      height: Dimensions.height50 * 2,
       padding: EdgeInsets.symmetric(horizontal: Dimensions.width30),
       decoration: BoxDecoration(
         color: AppColors.mainColor,
@@ -85,7 +85,6 @@ class BottomBarWidget extends StatelessWidget {
           GestureDetector(
             onTap: (){
               shoesController.addItem(productShoesDetail);
-
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: Dimensions.height10,horizontal: Dimensions.width20),

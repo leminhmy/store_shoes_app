@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:store_shoes_app/screens/add_product_page/add_product_page.dart';
 import 'package:store_shoes_app/screens/detail_page/detail_page.dart';
 import 'package:store_shoes_app/screens/home_page/main_home_page.dart';
 import 'package:store_shoes_app/screens/search_page/search_page.dart';
@@ -13,6 +14,7 @@ class RouteHelper{
   static const String cartPage = '/cart-page';
   static const String signIn = '/sign-in';
   static const String search = '/search';
+  static const String addProduct = '/add-product';
 
   static getInitial()=>'$initial';
   static String getShoesDetail(int pageId, String page)=>'$shoesDetail?pageId=$pageId&page=$page';
@@ -20,11 +22,13 @@ class RouteHelper{
   static String getCartPage(String page, {int index = -1})=> '$cartPage?page=$page&index=$index';
   static String getSignInPage()=> '$signIn';
   static String getSearchPage()=> '$search';
+  static String getAddProductPage()=> '$addProduct';
 
 
   static List<GetPage> routes =[
     GetPage(name: initial, page: ()=>MainHomePage()),
     GetPage(name: search, page: ()=>SearchPage()),
+    GetPage(name: addProduct, page: ()=>AddProductPage()),
     GetPage(name: signIn, page: ()=>SignInPage(),transition: Transition.fade),
     GetPage(name: shoesDetail, page: (){
       var pageId = Get.parameters['pageId'];

@@ -10,6 +10,8 @@ class ApiClient extends GetConnect implements GetxService{
   late Map<String, String> _mainHeaders;
   late SharedPreferences sharedPreferences;
 
+  Map<String, String> get mainHeaders => _mainHeaders;
+
   ApiClient({
     required this.appBaseUrl,
     required this.sharedPreferences,
@@ -45,6 +47,10 @@ class ApiClient extends GetConnect implements GetxService{
       }
   }
 
+  getMainHeader(){
+    return _mainHeaders;
+  }
+
   Future<Response> postData(String uri, dynamic body) async{
     print(body.toString());
     try{
@@ -60,6 +66,16 @@ class ApiClient extends GetConnect implements GetxService{
   Future<Response> deleteData(String uri) async{
     try{
       Response response =  await delete(uri,headers: _mainHeaders);
+      print(response.toString());
+      return response;
+    }catch(e){
+      print(e.toString());
+      return Response(statusCode: 1,statusText: e.toString());
+    }
+  }
+  Future<Response> putData(String uri,dynamic body) async{
+    try{
+      Response response =  await put(uri, body,headers: _mainHeaders);
       print(response.toString());
       return response;
     }catch(e){

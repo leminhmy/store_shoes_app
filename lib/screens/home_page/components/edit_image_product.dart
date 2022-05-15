@@ -30,10 +30,11 @@ class EditImageProduct extends StatefulWidget {
 
 class _EditImageProductState extends State<EditImageProduct> {
   final ImagePicker _picker = ImagePicker();
-   List<String> listImgApi = [];
+  List<String> listImgApi = [];
   String listImgApiBase = '';
   List<XFile>? _imageList = [];
   String imgApiString = '';
+  late BuildContext dialogContext;
 
   @override
   void initState() {
@@ -52,7 +53,6 @@ class _EditImageProductState extends State<EditImageProduct> {
           listImgApiBase = shoesController.shoesProductList[widget.index].listimg!;
           imgApiString = listImgApiBase.substring(0,listImgApiBase.length - 1);
           listImgApi = convertDataStringToList(imgApiString);
-          print(listImgApi);
           return Container(
             decoration: const BoxDecoration(
                 color: Colors.yellow,
@@ -207,15 +207,13 @@ class _EditImageProductState extends State<EditImageProduct> {
                           children: [
                             GestureDetector(
                                 onTap: ()async{
-                                  await uploadFileImg(widget.shoesProduct[widget.index].id);
-                                  print("taped");
+                                  if(_imageList!.isNotEmpty){
+                                    await uploadFileImg(widget.shoesProduct[widget.index].id,context);
+                                  }else{
+                                    showCustomSnackBar("List Image min = 1");
+                                  }
                                 },
                                 child: ButtonBorderRadius(widget: BigText(text: "Save",))),
-                            GestureDetector(
-                                onTap: ()async{
-                                  await shoesController.getShoesProductList();
-                                },
-                                child: ButtonBorderRadius(widget: BigText(text: "Update",))),
 
                           ],
                         ),
@@ -246,7 +244,21 @@ class _EditImageProductState extends State<EditImageProduct> {
     });
   }
 
-  uploadFileImg(int index) async {
+  uploadFileImg(int index,BuildContext context) async {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          dialogContext = context;
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              BigText(text: "Đang up load"),
+            ],
+          );
+        });
+
     var postUri = Uri.parse(AppConstants.BASE_URL+AppConstants.UPLOAD_FILE_URI);
     http.MultipartRequest request = http.MultipartRequest("POST", postUri);
 
@@ -261,13 +273,17 @@ class _EditImageProductState extends State<EditImageProduct> {
     request.files.addAll(listMultipartFile);
 
     http.StreamedResponse response = await request.send();
+
+
     if(response.statusCode == 200)
     {
+      Navigator.pop(dialogContext);
       _imageList = [];
       Get.find<ShoesController>().getShoesProductList();
       showCustomSnackBar("Upload Img Success",isError: false);
     }
     else{
+      Navigator.pop(dialogContext);
       showCustomSnackBar("Error Upload Img Success",);
     }
     setState(() {
