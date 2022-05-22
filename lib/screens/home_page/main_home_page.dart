@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:store_shoes_app/controller/auth_controller.dart';
 import 'package:store_shoes_app/controller/user_controller.dart';
+import 'package:store_shoes_app/routes/route_helper.dart';
 import 'package:store_shoes_app/screens/account_page/account_page.dart';
 import 'package:store_shoes_app/screens/auth/sign_in_page.dart';
 import 'package:store_shoes_app/screens/auth/sign_up_page.dart';
@@ -41,10 +42,6 @@ class _MainHomePageState extends State<MainHomePage> {
     super.initState();
     Get.find<ShoesController>().getShoesProductList();
     Get.find<ShoesController>().getShoesTypeList();
-    if(Get.find<AuthController>().userLoggedIn()){
-      Get.find<UserController>().getUserInfo();
-      Get.find<MessagesController>().getMessages();
-    }
 
   }
 
@@ -69,8 +66,8 @@ class _MainHomePageState extends State<MainHomePage> {
 
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.archive),
-            label: "date",
+            icon: Icon(Icons.messenger),
+            label: "mess",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart_outlined),

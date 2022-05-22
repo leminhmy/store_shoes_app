@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
                     SizedBox(
                       height: Dimensions.height10,
                     ),
-                    shoesController.isLoaded?PopularProducts(shoesProduct: shoesController.listFilterShoes,):CustomLoader(),
+                    shoesController.shoesProductList.isNotEmpty?PopularProducts(shoesProduct: shoesController.listFilterShoes,):CustomLoader(),
                   ],
                 ),
               ),

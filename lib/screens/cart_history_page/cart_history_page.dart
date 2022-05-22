@@ -31,6 +31,7 @@ class CartHistoryPage extends StatefulWidget {
 
 class _CartHistoryPageState extends State<CartHistoryPage> {
   List<Order> getCartHistoryList = [];
+  String namePage = "Cart History";
 
   List<Widget> listStatusProduct = [
     Row(
@@ -90,7 +91,12 @@ class _CartHistoryPageState extends State<CartHistoryPage> {
 
     Get.find<OrderController>().getOrderList();
     if (Get.find<AuthController>().userLoggedIn()) {
+
       getCartHistoryList = Get.find<OrderController>().order;
+
+      if(Get.find<UserController>().userIsAdmin!){
+        namePage = "List Order User";
+      }
     }
   }
 
@@ -114,7 +120,7 @@ class _CartHistoryPageState extends State<CartHistoryPage> {
           }
           return Column(
             children: [
-              HearderAppBar(),
+              HearderAppBar(namePage: namePage),
               //ListCart history
               authController.userLoggedIn()
                   ? (_orderController.order.isNotEmpty

@@ -1,4 +1,4 @@
-package com.example.store_shoes_app
+package ml.leminhmy.newappname
 
 import io.flutter.embedding.android.FlutterActivity
 

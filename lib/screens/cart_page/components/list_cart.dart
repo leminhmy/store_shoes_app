@@ -56,7 +56,10 @@ class _ListCartState extends State<ListCart> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CartController>(builder: (cartController) {
+      if(widget.page == "cartpage"){
+        _cartList = Get.find<CartController>().getItems;
 
+      }
       return _cartList.isNotEmpty?Padding(
         padding: const EdgeInsets.all(5),
         child: Column(

@@ -6,7 +6,8 @@ import '../utils/dimensions.dart';
 class AppTextField extends StatelessWidget {
    AppTextField({
     Key? key,
-    required this.textFieldController, required this.prefixIcon, this.colorIcon = Colors.grey, required this.hintText, this.isObscure = false,
+    required this.textFieldController, required this.prefixIcon, this.colorIcon = Colors.grey,
+     required this.hintText, this.isObscure = false, this.suffixIcon,
   }) : super(key: key);
 
   final TextEditingController textFieldController;
@@ -14,7 +15,7 @@ class AppTextField extends StatelessWidget {
   final Color colorIcon;
   final String hintText;
   bool isObscure;
-
+  final Widget? suffixIcon;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,10 +33,10 @@ class AppTextField extends StatelessWidget {
             ]
         ),
         child: TextField(
-
           obscureText: isObscure?true:false,
           controller: textFieldController,
           decoration: InputDecoration(
+            suffixIcon: suffixIcon,
               hintText: hintText,
               prefixIcon: Icon(prefixIcon,color: colorIcon,),
               focusedBorder: OutlineInputBorder(

@@ -1,6 +1,8 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:store_shoes_app/controller/order_controller.dart';
+import 'package:store_shoes_app/controller/user_controller.dart';
 
 import 'package:store_shoes_app/screens/auth/sign_up_page.dart';
 
@@ -14,13 +16,36 @@ import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import 'package:get/get.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
 
   @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+   bool isShowVisibility = false;
+   var emailController = TextEditingController();
+   var passwordController = TextEditingController();
+  String deviceTokenToSendPushNotification = "";
+
+
+   Future<void> getDeviceTokenToSendNotification() async {
+     final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+     final token = await _fcm.getToken();
+     deviceTokenToSendPushNotification = token.toString();
+     print("Token Value $deviceTokenToSendPushNotification");
+   }
+
+   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDeviceTokenToSendNotification();
+  }
+  @override
   Widget build(BuildContext context) {
-    var emailController = TextEditingController();
-    var passwordController = TextEditingController();
+
     late BuildContext dialogContext;
     Future<void> _login(AuthController authController) async {
       String email = emailController.text.trim();
@@ -57,6 +82,7 @@ class SignInPage extends StatelessWidget {
             Navigator.pop(dialogContext);
             Get.toNamed(RouteHelper.getInitial());
             Get.find<OrderController>().getOrderList();
+            Get.find<UserController>().getUserInfo();
             print("Login success");
           }else{
             Navigator.pop(dialogContext);
@@ -133,10 +159,19 @@ class SignInPage extends StatelessWidget {
                       height: Dimensions.height20,
                     ),
                     AppTextField(
-                      isObscure: true,
+                      suffixIcon: IconButton(
+                        onPressed: (){
+                          setState(() {
+                            isShowVisibility =!isShowVisibility;
+
+                          });
+                        },
+                        icon: isShowVisibility?const Icon(Icons.visibility_off):const Icon(Icons.visibility),
+                      ),
+                      isObscure: isShowVisibility,
                       textFieldController: passwordController,
                       hintText: "Password",
-                      prefixIcon: Icons.email,
+                      prefixIcon: Icons.password,
                       colorIcon: AppColors.mainColor,
                     ),
                     SizedBox(

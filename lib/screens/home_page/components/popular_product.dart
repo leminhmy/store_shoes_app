@@ -48,6 +48,13 @@ class _PopularProductsState extends State<PopularProducts> {
 
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding:
@@ -124,61 +131,71 @@ class _PopularProductsState extends State<PopularProducts> {
                             ),
                             Align(
                               alignment: Alignment.bottomCenter,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: Dimensions.width20),
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: Dimensions.width20,
-                                    vertical: Dimensions.width10),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.5),
-                                  borderRadius:
-                                  BorderRadius.circular(Dimensions.radius10),
-                                ),
-                                height: Dimensions.height50,
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        BigText(
-                                            text:
-                                            widget.shoesProduct[index].name!,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                        SmallText(
-                                          text: widget
-                                              .shoesProduct[index].subTitle ??
-                                              "None",
-                                          color: Colors.white,
-                                        ),
-                                      ],
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: Dimensions.width10,vertical:Dimensions.height5 ),
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: Dimensions.width20,
+                                        vertical: Dimensions.width10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.5),
+                                      borderRadius:
+                                      BorderRadius.circular(Dimensions.radius10),
                                     ),
-                                    Column(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          "Price: 150.000",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            decoration:
-                                            TextDecoration.lineThrough,
-                                            decorationColor: Colors.red,
+                                        SizedBox(
+                                          width:Dimensions.height50*3,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+                                              BigText(
+                                                maxLines: 1,
+                                                  text:
+                                                  widget.shoesProduct[index].name!,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                              SmallText(
+                                                maxLines: 1,
+                                                text: widget
+                                                    .shoesProduct[index].subTitle ??
+                                                    "None",
+                                                color: Colors.white,
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        BigText(
-                                          text: AppVariable().numberFormatPriceVi(
-                                              widget.shoesProduct[index].price!),
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: Dimensions.font20,
+                                        Column(
+                                          children: [
+                                            Text(
+                                              "Price: 150.000",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                decoration:
+                                                TextDecoration.lineThrough,
+                                                decorationColor: Colors.red,
+                                              ),
+                                            ),
+                                            
+                                            BigText(
+                                              text: AppVariable().numberFormatPriceVi(
+                                                  widget.shoesProduct[index].price!),
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: Dimensions.font20,
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                             Align(
@@ -221,7 +238,7 @@ class _PopularProductsState extends State<PopularProducts> {
             }),
           ):SizedBox(
           height: Dimensions.height50*5,
-            child: NoDataPage(text: "Category is Empty")),
+            child: NoDataPage(text: "Popular is Empty")),
         ],
       ),
     );

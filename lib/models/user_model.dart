@@ -3,12 +3,14 @@ class UserModel {
   String name;
   String email;
   String phone;
+  int status;
 
   UserModel({
     required this.id,
     required this.name,
     required this.email,
     required this.phone,
+    required this.status,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json){
@@ -18,6 +20,7 @@ class UserModel {
         name: json['name'],
         email: json['email'],
         phone: json['phone'],
+        status: json['status'],
     );
   }
 }

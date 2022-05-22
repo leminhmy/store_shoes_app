@@ -71,20 +71,20 @@ class AppBarAction extends StatelessWidget {
               SizedBox(
                 width: Dimensions.width50,
               ),
-              GetBuilder<ShoesController>(
-                  builder: (shoesController) {
+              GetBuilder<CartController>(
+                  builder: (catController) {
                     return Stack(
                       children: [
                         GestureDetector(
                             onTap: () {
-                              print(shoesController.totalItems);
+                              print(catController.totalItems);
                             },
                             child: BorderRadiusWidget(
                                 widget: Icon(
                                   Icons.shopping_cart_outlined,
                                   color: Colors.white,
                                 ))),
-                        shoesController.totalItems >= 1
+                        catController.totalItems >= 1
                             ? Positioned(
                           right: 0,top: 0,
                           child: Stack(
@@ -100,7 +100,7 @@ class AppBarAction extends StatelessWidget {
                               ),
                               Align(
                                   alignment: Alignment.center,
-                                  child: BigText(text: Get.find<ShoesController>().totalItems.toString(),color: Colors.white,fontSize: Dimensions.font12,)),
+                                  child: BigText(text: catController.totalItems.toString(),color: Colors.white,fontSize: Dimensions.font12,)),
                             ],
                           ),
                         )

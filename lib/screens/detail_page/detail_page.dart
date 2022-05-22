@@ -10,6 +10,7 @@ import 'package:store_shoes_app/utils/dimensions.dart';
 
 import '../../components/border_radius_widget.dart';
 import '../../controller/cart_controller.dart';
+import '../../models/product.dart';
 import 'components/bottom_bar_widget.dart';
 import 'components/image_banner.dart';
 import 'components/info_product.dart';
@@ -31,12 +32,16 @@ class _DetailPageState extends State<DetailPage> {
   List<String> listColor = [];
   List<int> listSizeInt = [];
   late int index;
-  var shoesDetail;
+  late ProductsModel shoesDetail;
+  List<ProductsModel> listOtherProduct = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+
+
 
     index = Get.find<ShoesController>()
         .shoesProductList
@@ -61,6 +66,9 @@ class _DetailPageState extends State<DetailPage> {
         .setDefaultSizeAndColor(listSizeInt[0], listColor[0]);
     Get.find<ShoesController>()
         .initProduct(shoesDetail, Get.find<CartController>(),listSizeInt[0],listColor[0]);
+
+    listOtherProduct = Get.find<ShoesController>().getOtherProductList(shoesDetail.typeId!);
+
 
   }
 
@@ -88,7 +96,7 @@ class _DetailPageState extends State<DetailPage> {
                   SizedBox(
                     height: Dimensions.height15,
                   ),
-                  OrtherProduct(),
+                  OrtherProduct(listOtherProduct: listOtherProduct),
                 ],
               ),
             )

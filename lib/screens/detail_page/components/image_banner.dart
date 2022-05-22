@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:store_shoes_app/components/big_text.dart';
 import 'package:store_shoes_app/components/border_radius_widget.dart';
+import 'package:store_shoes_app/controller/cart_controller.dart';
 import 'package:store_shoes_app/controller/shoes_controller.dart';
 import 'package:store_shoes_app/models/product.dart';
 import 'package:store_shoes_app/screens/home_page/main_home_page.dart';
@@ -150,8 +151,8 @@ class _ImageBannerState extends State<ImageBanner> {
                           Icons.arrow_back_ios_outlined,
                           color: Colors.white,
                         ))),
-                    GetBuilder<ShoesController>(
-                      builder: (shoesController) {
+                    GetBuilder<CartController>(
+                      builder: (cartController) {
                         return Stack(
                           children: [
                             GestureDetector(
@@ -163,7 +164,7 @@ class _ImageBannerState extends State<ImageBanner> {
                                   Icons.shopping_cart_outlined,
                                   color: Colors.white,
                                 ))),
-                            shoesController.totalItems >= 1
+                            cartController.totalItems >= 1
                                 ? Positioned(
                               right: 0,top: 0,
                               child: Stack(
@@ -179,7 +180,7 @@ class _ImageBannerState extends State<ImageBanner> {
                                   ),
                                   Align(
                                       alignment: Alignment.center,
-                                      child: BigText(text: Get.find<ShoesController>().totalItems.toString(),color: Colors.white,fontSize: Dimensions.font12,)),
+                                      child: BigText(text: cartController.totalItems.toString(),color: Colors.white,fontSize: Dimensions.font12,)),
                                 ],
                               ),
                             )

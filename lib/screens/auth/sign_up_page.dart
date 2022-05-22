@@ -14,20 +14,30 @@ import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
   @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
+  var nameController = TextEditingController();
+  var phoneController = TextEditingController();
+  var singUpImage = [
+    "t.png",
+    "f.png",
+    "g.png",
+  ];
+
+  //showpassword
+  bool isShowVisibility = false;
+
+  @override
   Widget build(BuildContext context) {
-    var emailController = TextEditingController();
-    var passwordController = TextEditingController();
-    var nameController = TextEditingController();
-    var phoneController = TextEditingController();
-    var singUpImage = [
-      "t.png",
-      "f.png",
-      "g.png",
-    ];
+
 
     void _registration(AuthController authController) {
       String name = nameController.text.trim();
@@ -100,7 +110,16 @@ class SignUpPage extends StatelessWidget {
                       height: Dimensions.height20,
                     ),
                     AppTextField(
-                      isObscure: true,
+                      suffixIcon:IconButton(
+                        onPressed: (){
+                          setState(() {
+                            isShowVisibility =!isShowVisibility;
+
+                          });
+                        },
+                        icon: isShowVisibility?const Icon(Icons.visibility_off):const Icon(Icons.visibility),
+                      ),
+                      isObscure: isShowVisibility,
                       textFieldController: passwordController,
                       hintText: "Password",
                       prefixIcon: Icons.password_sharp,

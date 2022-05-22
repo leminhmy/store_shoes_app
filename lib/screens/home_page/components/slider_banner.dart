@@ -154,6 +154,7 @@ class _SliderBannerState extends State<SliderBanner> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       BigText(
+                        maxLines: 1,
                         text: shoesProduct.name!,
                         color: AppColors.mainBlackColor,
                       ),

@@ -1,4 +1,5 @@
 import 'package:store_shoes_app/controller/cart_controller.dart';
+import 'package:store_shoes_app/controller/user_controller.dart';
 import 'package:store_shoes_app/data/api/api_client.dart';
 import 'package:get/get.dart';
 
@@ -10,7 +11,14 @@ class OrderRepo{
   OrderRepo({required this.apiClient});
 
   Future<Response> getOrderList()async {
-    return await apiClient.getData(AppConstants.ORDER_URI);
+    if(Get.find<UserController>().userIsAdmin!)
+      {
+        return await apiClient.getData(AppConstants.ORDER_ADMIN_URI);
+      }
+    else{
+      return await apiClient.getData(AppConstants.ORDER_URI);
+
+    }
   }
 
   Future<Response> placeOrder(String address, int order_amount, List<Map<String, dynamic>> cart)async{

@@ -54,8 +54,7 @@ class ShoesController extends GetxController{
     update();
   }
 
-  void updateWidget(){
-
+  void updateShoesController(){
     update();
   }
 
@@ -117,6 +116,7 @@ class ShoesController extends GetxController{
 
 
   Future<void> getShoesProductList() async{
+    _isLoaded = false;
     Response response = await shoesRepo.getShoesProductList();
     if(response.statusCode == 200)
       {
@@ -144,7 +144,6 @@ class ShoesController extends GetxController{
     {
       _shoesTypeList = [];
       _shoesTypeList.addAll(ShoesType.fromJson(response.body).shoesType);
-      _isLoaded = true;
       update();
     }
     else{
@@ -165,6 +164,19 @@ class ShoesController extends GetxController{
       indexSelected = index;
 
     update();
+  }
+
+   List<ProductsModel> getOtherProductList(int type){
+    List<ProductsModel> listOtherProduct = [];
+    _shoesProductList.forEach((element) {
+      if(element.typeId == type)
+      {
+        listOtherProduct.add(element);
+
+      }
+    });
+
+    return listOtherProduct;
   }
 
   void setListFilterShoes(){

@@ -11,8 +11,11 @@ import 'package:store_shoes_app/utils/colors.dart';
 import 'package:store_shoes_app/utils/dimensions.dart';
 
 import '../../components/base/show_custom_snackbar.dart';
+import '../../controller/auth_controller.dart';
+import '../../controller/user_controller.dart';
 import '../../data/api/api_client.dart';
 import '../../utils/app_contants.dart';
+import '../cart_history_page/cart_history_page.dart';
 import 'components/messaging_cart.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
@@ -25,10 +28,9 @@ class MessagingPage extends StatefulWidget {
 }
 
 class _MessagingPageState extends State<MessagingPage> {
-
   List<MessagesModel> listMessages = [];
-  int userId = 9;
-
+  int userId = 11;
+  int userTake = 11;
   String messaging = "";
   TextEditingController typeMessaging = TextEditingController();
 
@@ -44,13 +46,16 @@ class _MessagingPageState extends State<MessagingPage> {
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
     fileImageSend = null;
     fileImage = null;
-    listMessages = Get.find<MessagesController>().getMessagesPeople(11);
+    if (Get.find<AuthController>().userLoggedIn()) {
+      Get.find<UserController>().getUserInfo();
+      userId = Get.find<UserController>().userModel!.id;
+      Get.find<MessagesController>().getMessages();
+    }
   }
-
-
 
   void imageSelect() async {
     fileImage = null;
@@ -58,14 +63,14 @@ class _MessagingPageState extends State<MessagingPage> {
     setState(() {});
   }
 
-  void sendMessaging(BuildContext context)async{
+  void sendMessaging(BuildContext context) async {
     statusSend = 1;
     fileImageSend = fileImage;
     messaging = typeMessaging.value.text;
 
-    if(typeMessaging.value.text == "" && fileImage == null){
-      showCustomSnackBar("Messaging is Empty",title: "Error send Messaging");
-    }else{
+    if (typeMessaging.value.text == "" && fileImage == null) {
+      showCustomSnackBar("Messaging is Empty", title: "Error send Messaging");
+    } else {
       showDialog(
           barrierDismissible: false,
           context: context,
@@ -79,23 +84,28 @@ class _MessagingPageState extends State<MessagingPage> {
               ],
             );
           });
-      var postUri = Uri.parse(AppConstants.BASE_URL+AppConstants.MESSAGES_SEND_URI);
-      http.MultipartRequest request = http.MultipartRequest("POST", postUri,);
+      var postUri =
+          Uri.parse(AppConstants.BASE_URL + AppConstants.MESSAGES_SEND_URI);
+      http.MultipartRequest request = http.MultipartRequest(
+        "POST",
+        postUri,
+      );
       //check image;
-      if(fileImage != null){
+      if (fileImage != null) {
         http.MultipartFile multipartFile = await http.MultipartFile.fromPath(
-            'image', fileImage!.path,filename: basename(fileImage!.path));
+            'image', fileImage!.path,
+            filename: basename(fileImage!.path));
         request.files.add(multipartFile);
       }
-      ApiClient apiClient = ApiClient(appBaseUrl: AppConstants.BASE_URL, sharedPreferences: Get.find());
+      ApiClient apiClient = ApiClient(
+          appBaseUrl: AppConstants.BASE_URL, sharedPreferences: Get.find());
       request.headers.addAll(apiClient.getMainHeader());
-      request.fields['id_take'] = "11";
-      if(typeMessaging.value.text != ""){
+      request.fields['id_take'] = userTake.toString();
+      if (typeMessaging.value.text != "") {
         request.fields['messaging'] = typeMessaging.value.text;
       }
       http.StreamedResponse response = await request.send();
-      if(response.statusCode == 200)
-      {
+      if (response.statusCode == 200) {
         Navigator.pop(dialogContext);
         fileImage = null;
         fileImageSend = null;
@@ -103,35 +113,27 @@ class _MessagingPageState extends State<MessagingPage> {
         statusSend = 2;
         typeMessaging = TextEditingController(text: "");
         Get.find<MessagesController>().getMessages();
-        Get.find<MessagesController>().getMessagesPeople(11);
-        setState(() {
-        });
-
-      }
-      else{
+        setState(() {});
+      } else {
         Navigator.pop(dialogContext);
-        showCustomSnackBar("Error send messages",title: "Error");
+        showCustomSnackBar("Error send messages", title: "Error");
         statusSend = 3;
-        setState(() {
-
-        });
+        setState(() {});
       }
       print(response.statusCode);
     }
-
-
   }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MessagesController>(
-      builder: (messagesController) {
-
-        listMessages = messagesController.getMessagesPeople(11);
-
-        return Scaffold(
-          appBar: buildAppBar(),
-          body: Column(
+    return Scaffold(
+      appBar: buildAppBar(),
+      body: GetBuilder<MessagesController>(
+        builder: (messageController) {
+          if (Get.find<AuthController>().userLoggedIn()) {
+            listMessages = messageController.getMessagesPeople(userTake);
+          }
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Expanded(
@@ -173,7 +175,7 @@ class _MessagingPageState extends State<MessagingPage> {
                                   BorderRadius.circular(Dimensions.radius10),
                                   image: DecorationImage(
                                       image: FileImage(
-                                          File(fileImageSend!.path),
+                                        File(fileImageSend!.path),
                                       ),
                                       fit: BoxFit.cover),
                                 ),
@@ -181,8 +183,8 @@ class _MessagingPageState extends State<MessagingPage> {
                               statusSend != 0?Container(
                                 padding: EdgeInsets.all(5),
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(Dimensions.radius20),
-                                    color: AppColors.textColor,
+                                  borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                  color: AppColors.textColor,
                                 ),
                                 child:
                                 statusSend ==1 ?Icon(Icons.upgrade_outlined,color:Colors.yellow,size: Dimensions.iconSize18,):
@@ -215,45 +217,51 @@ class _MessagingPageState extends State<MessagingPage> {
                     ),
                   )),
             ],
-          ),
-          bottomNavigationBar: buildBottomNavigator(context),
-        );
-      }
+          );
+        }
+      ),
+      bottomNavigationBar: buildBottomNavigator(context),
     );
   }
 
-
-   buildBottomNavigator(BuildContext context) {
+  buildBottomNavigator(BuildContext context) {
     return Stack(
       clipBehavior: Clip.none,
-
       children: [
         Container(
           height: Dimensions.height50 * 1.5,
           padding: EdgeInsets.only(left: Dimensions.height10),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(Dimensions.radius20),
-              topLeft: Radius.circular(Dimensions.radius20),
-            ),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 4),
-                blurRadius: 20,
-                color: Colors.grey,
-              )
-            ]
-          ),
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(Dimensions.radius20),
+                topLeft: Radius.circular(Dimensions.radius20),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 4),
+                  blurRadius: 20,
+                  color: Colors.grey,
+                )
+              ]),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(Icons.mic,color: AppColors.mainColor,size: Dimensions.iconSize26,),
-              SizedBox(width: Dimensions.height5,),
-              Expanded(child:  Container(
+              Icon(
+                Icons.mic,
+                color: AppColors.mainColor,
+                size: Dimensions.iconSize26,
+              ),
+              SizedBox(
+                width: Dimensions.height5,
+              ),
+              Expanded(
+                  child: Container(
                 margin: EdgeInsets.symmetric(vertical: Dimensions.height10),
-                padding: EdgeInsets.symmetric(horizontal: Dimensions.height10,vertical: Dimensions.height5),
+                padding: EdgeInsets.symmetric(
+                    horizontal: Dimensions.height10,
+                    vertical: Dimensions.height5),
                 decoration: BoxDecoration(
                   color: AppColors.mainColor.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(Dimensions.radius40),
@@ -261,62 +269,72 @@ class _MessagingPageState extends State<MessagingPage> {
                 child: Row(
                   children: [
                     Icon(Icons.sentiment_satisfied_alt_outlined),
-                    SizedBox(width: Dimensions.height10,),
-                    Expanded(child: TextField(
+                    SizedBox(
+                      width: Dimensions.height10,
+                    ),
+                    Expanded(
+                        child: TextField(
                       controller: typeMessaging,
                       textAlign: TextAlign.center,
                       maxLines: 3,
                       decoration: InputDecoration(
-                        hintText: "Type message",
-                        border: InputBorder.none
-                      ),
+                          hintText: "Type message", border: InputBorder.none),
                     )),
-                    IconButton(onPressed: (){
-                      imageSelect();
-                    }, icon:  Icon(Icons.image_outlined)),
-                    SizedBox(width: Dimensions.height10,),
+                    IconButton(
+                        onPressed: () {
+                          imageSelect();
+                        },
+                        icon: Icon(Icons.image_outlined)),
+                    SizedBox(
+                      width: Dimensions.height10,
+                    ),
                     Icon(Icons.camera_alt_outlined),
                   ],
                 ),
               )),
               IconButton(
-                highlightColor: Colors.red,
-                  onPressed: (){
-                  sendMessaging(context);
+                  highlightColor: Colors.red,
+                  onPressed: () {
+                    sendMessaging(context);
                     print("taped");
-              }, icon: Icon(Icons.send,color: AppColors.mainColor,size: Dimensions.iconSize26*1.4,))
+                  },
+                  icon: Icon(
+                    Icons.send,
+                    color: AppColors.mainColor,
+                    size: Dimensions.iconSize26 * 1.4,
+                  ))
             ],
           ),
         ),
-        fileImage!= null?Positioned(
-          left: Dimensions.height5,
-          bottom: Dimensions.height50*1.7,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                height: Dimensions.height50*3,
-                width: Dimensions.height50*3,
-                decoration: BoxDecoration(
-                  color: AppColors.greenColor,
-                  borderRadius:
-                  BorderRadius.circular(Dimensions.radius10),
-                  image: DecorationImage(
-                      image: FileImage(
-                        File(fileImage!.path),
+        fileImage != null
+            ? Positioned(
+                left: Dimensions.height5,
+                bottom: Dimensions.height50 * 1.7,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      height: Dimensions.height50 * 3,
+                      width: Dimensions.height50 * 3,
+                      decoration: BoxDecoration(
+                        color: AppColors.greenColor,
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radius10),
+                        image: DecorationImage(
+                            image: FileImage(
+                              File(fileImage!.path),
+                            ),
+                            fit: BoxFit.cover),
                       ),
-                      fit: BoxFit.cover),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ):Positioned(
-          bottom: 0,
-            right: 0,
-            child: Container()),
+              )
+            : Positioned(bottom: 0, right: 0, child: Container()),
       ],
     );
   }
+
   AppBar buildAppBar() {
     return AppBar(
       backgroundColor: AppColors.btnClickColor,
@@ -325,19 +343,23 @@ class _MessagingPageState extends State<MessagingPage> {
           CircleAvatar(
             backgroundImage: AssetImage("assets/images/a1.jpg"),
           ),
-          SizedBox(width: Dimensions.height10,),
+          SizedBox(
+            width: Dimensions.height10,
+          ),
           BigText(text: "Name User"),
         ],
       ),
       actions: [
-        IconButton(onPressed: (){
-          Get.find<MessagesController>().getMessages();
-        }, icon: Icon(Icons.local_phone)),
-        IconButton(onPressed: (){
-          Get.find<MessagesController>().getMessagesPeople(11);
-        }, icon: Icon(Icons.videocam)),
+        IconButton(
+            onPressed: () {
+              Get.find<MessagesController>().getMessages();
+            },
+            icon: Icon(Icons.local_phone)),
+        IconButton(
+            onPressed: () {
+            },
+            icon: Icon(Icons.videocam)),
       ],
     );
   }
 }
-

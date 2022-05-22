@@ -4,7 +4,7 @@ class AppConstants{
 
 
   //product
-  static const String BASE_URL = "http://192.168.1.6/";
+  static const String BASE_URL = "http://192.168.1.7/";
   static const String UPLOAD_URL = "uploads/";
   static const String LEATHER_PRODUCT_URI = "api/v1/products/leather";
   static const String SHOES_PRODUCT_URI = "api/v1/products/shoes";
@@ -19,6 +19,7 @@ class AppConstants{
 
   //order
   static const String ORDER_URI = "api/v1/order/list";
+  static const String ORDER_ADMIN_URI = "api/v1/order/listadmin";
   static const String PLACE_ORDER_URI = "api/v1/order/place";
 
 
@@ -29,6 +30,11 @@ class AppConstants{
   //messages
   static const String MESSAGES_GET_URI = "api/v1/messaging/get";
   static const String MESSAGES_SEND_URI = "api/v1/messaging/send";
+
+  //map
+  static const String MAP_PROVINE_URI = "api/v1/map/provine";
+  static const String MAP_DISTRICT_URI = "api/v1/map/district";
+  static const String MAP_COMMUNE_URI = "api/v1/map/commune";
 
   static const String TOKEN = "";
   static const String PHONE = "";
