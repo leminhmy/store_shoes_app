@@ -14,21 +14,34 @@ import 'category.dart';
 import 'popular_product.dart';
 import 'slider_banner.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  Future<void> getData()async {
+    Get.find<ShoesController>().getShoesProductList();
+    Get.find<ShoesController>().getShoesTypeList();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
+  @override
   Widget build(BuildContext context) {
 
-    Future<void> getData()async {
-      Get.find<ShoesController>().getShoesProductList();
-      Get.find<ShoesController>().getShoesTypeList();
-    }
 
-    return RefreshIndicator(
-      onRefresh: getData,
-      child: Scaffold(
-        body: GetBuilder<ShoesController>(
+    return Scaffold(
+      body: RefreshIndicator(
+        onRefresh: getData,
+        child: GetBuilder<ShoesController>(
           builder: (shoesController) {
             return SingleChildScrollView(
               child: Padding(

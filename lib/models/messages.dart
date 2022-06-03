@@ -4,6 +4,7 @@ class MessagesModel{
   int? idTake;
   String? messaging;
   String? image;
+  int? see;
   String? createdAt;
   String? updatedAt;
 
@@ -13,6 +14,7 @@ class MessagesModel{
     this.idTake,
     this.messaging,
     this.image,
+    this.see,
     this.createdAt,
     this.updatedAt
   });
@@ -23,6 +25,7 @@ class MessagesModel{
     idTake = json['id_take'];
     messaging = json['messaging'];
     image = json['image'];
+    see = json['see'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
@@ -34,6 +37,7 @@ class MessagesModel{
       "id_take": this.idTake,
       "messaging": this.messaging,
       "image": this.image,
+      "see": this.see,
       "createdAt": this.createdAt,
       "updatedAt": this.updatedAt,
     };

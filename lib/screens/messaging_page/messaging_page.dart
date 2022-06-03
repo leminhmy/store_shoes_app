@@ -7,6 +7,8 @@ import 'package:store_shoes_app/components/big_text.dart';
 import 'package:store_shoes_app/components/small_text.dart';
 import 'package:store_shoes_app/controller/messages_controller.dart';
 import 'package:store_shoes_app/models/messages.dart';
+import 'package:store_shoes_app/models/user_model.dart';
+import 'package:store_shoes_app/severs/sever_socketio/socketio_client.dart';
 import 'package:store_shoes_app/utils/colors.dart';
 import 'package:store_shoes_app/utils/dimensions.dart';
 
@@ -19,9 +21,13 @@ import '../cart_history_page/cart_history_page.dart';
 import 'components/messaging_cart.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class MessagingPage extends StatefulWidget {
-  const MessagingPage({Key? key}) : super(key: key);
+  const MessagingPage({Key? key, required this.userTake, required this.userModel}) : super(key: key);
+
+  final int userTake;
+  final UserModel userModel;
 
   @override
   State<MessagingPage> createState() => _MessagingPageState();
@@ -29,8 +35,8 @@ class MessagingPage extends StatefulWidget {
 
 class _MessagingPageState extends State<MessagingPage> {
   List<MessagesModel> listMessages = [];
-  int userId = 11;
-  int userTake = 11;
+  int? userId;
+  int? userTake;
   String messaging = "";
   TextEditingController typeMessaging = TextEditingController();
 
@@ -43,17 +49,28 @@ class _MessagingPageState extends State<MessagingPage> {
   int statusSend = 0;
   late BuildContext dialogContext;
 
+  //socketio
+  late final IO.Socket socket;
+
   @override
   void initState() {
     // TODO: implement initState
-
+    socket = IO.io(AppConstants.SOCKETIO_URI,<String, dynamic>{
+      "transports":["websocket"],
+      "autoConnect":false,
+    });
     super.initState();
+
     fileImageSend = null;
     fileImage = null;
+    userTake = widget.userTake;
     if (Get.find<AuthController>().userLoggedIn()) {
       Get.find<UserController>().getUserInfo();
-      userId = Get.find<UserController>().userModel!.id;
+      Get.find<MessagesController>().setSeeMessages(userTake.toString());
+      Get.find<MessagesController>().getMissMessages();
+      userId = Get.find<UserController>().userModel!.id!;
       Get.find<MessagesController>().getMessages();
+      SeverSocketIo().connect(userId);
     }
   }
 
@@ -106,6 +123,9 @@ class _MessagingPageState extends State<MessagingPage> {
       }
       http.StreamedResponse response = await request.send();
       if (response.statusCode == 200) {
+        SeverSocketIo().sendData(userTake!, "message");
+        // sendData(userTake!);
+        Get.find<MessagesController>().sendNotification(typeNotification: "messaging",title: "Messages",content: messaging, userId: widget.userModel.id!);
         Navigator.pop(dialogContext);
         fileImage = null;
         fileImageSend = null;
@@ -124,6 +144,31 @@ class _MessagingPageState extends State<MessagingPage> {
     }
   }
 
+  //realtime with socketio sever web haruko
+
+
+  // void sendData(int id){
+  //   socket.emit("message",{"idTake":id});
+  // }
+
+  // void connect(dynamic userId){
+  //
+  //   socket.connect();
+  //   socket.emit("signin",userId);
+  //   socket.onConnect((data) {
+  //     print("Connected");
+  //     socket.on("message", (msg) {
+  //       Get.find<MessagesController>().getMessages();
+  //       Get.find<MessagesController>().getMissMessages();
+  //
+  //       // print(msg);
+  //     });
+  //   });
+  //   print(socket.connected);
+  // }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,7 +176,7 @@ class _MessagingPageState extends State<MessagingPage> {
       body: GetBuilder<MessagesController>(
         builder: (messageController) {
           if (Get.find<AuthController>().userLoggedIn()) {
-            listMessages = messageController.getMessagesPeople(userTake);
+            listMessages = messageController.getMessagesPeople(userTake!);
           }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -145,7 +190,7 @@ class _MessagingPageState extends State<MessagingPage> {
 
                       children: [
                         //get api
-                        ...List.generate(listMessages.length, (index) => MessagesCart(messagesModel: listMessages[index], userId: userId,)),
+                        ...List.generate(listMessages.length, (index) => MessagesCart(messagesModel: listMessages[index], userId: userId!,)),
 
 
                         //local send
@@ -216,11 +261,11 @@ class _MessagingPageState extends State<MessagingPage> {
                       ],
                     ),
                   )),
+              buildBottomNavigator(context),
             ],
           );
         }
       ),
-      bottomNavigationBar: buildBottomNavigator(context),
     );
   }
 
@@ -340,19 +385,23 @@ class _MessagingPageState extends State<MessagingPage> {
       backgroundColor: AppColors.btnClickColor,
       title: Row(
         children: [
-          CircleAvatar(
+          widget.userModel.image == ""?const CircleAvatar(
             backgroundImage: AssetImage("assets/images/a1.jpg"),
+          ):CircleAvatar(
+            backgroundColor: AppColors.mainColor,
+            backgroundImage: NetworkImage(AppConstants.BASE_URL +
+                AppConstants.UPLOAD_URL +"users/"+
+                widget.userModel.image!)
           ),
           SizedBox(
             width: Dimensions.height10,
           ),
-          BigText(text: "Name User"),
+          BigText(text: widget.userModel.name!),
         ],
       ),
       actions: [
         IconButton(
             onPressed: () {
-              Get.find<MessagesController>().getMessages();
             },
             icon: Icon(Icons.local_phone)),
         IconButton(

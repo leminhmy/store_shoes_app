@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:store_shoes_app/components/small_text.dart';
 import 'package:store_shoes_app/controller/auth_controller.dart';
 import 'package:store_shoes_app/controller/user_controller.dart';
 import 'package:store_shoes_app/routes/route_helper.dart';
@@ -8,11 +9,18 @@ import 'package:store_shoes_app/screens/auth/sign_up_page.dart';
 import 'package:store_shoes_app/screens/cart_history_page/cart_history_page.dart';
 
 import 'package:store_shoes_app/screens/home_page/components/home_page.dart';
+import 'package:store_shoes_app/screens/messaging_page/messages_page.dart';
 import 'package:store_shoes_app/screens/messaging_page/messaging_page.dart';
+import 'package:store_shoes_app/severs/sever_socketio/socketio_client.dart';
+import 'package:store_shoes_app/utils/app_contants.dart';
+import 'package:store_shoes_app/utils/dimensions.dart';
+import '../../controller/cart_controller.dart';
+import '../../controller/map_controller.dart';
 import '../../controller/messages_controller.dart';
 import '../../controller/shoes_controller.dart';
 import '../../utils/colors.dart';
 import 'package:get/get.dart';
+
 
 class MainHomePage extends StatefulWidget {
   const MainHomePage({Key? key}) : super(key: key);
@@ -23,10 +31,11 @@ class MainHomePage extends StatefulWidget {
 
 class _MainHomePageState extends State<MainHomePage> {
   int _selectedIndex = 0;
+  int? userId;
 
   List page = [
     HomePage(),
-    MessagingPage(),
+    MessagesPage(),
     CartHistoryPage(),
     AccountPage(),
   ];
@@ -40,14 +49,31 @@ class _MainHomePageState extends State<MainHomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     Get.find<ShoesController>().getShoesProductList();
     Get.find<ShoesController>().getShoesTypeList();
+    Get.find<ShoesController>().getShoesTypeList();
+    Get.find<CartController>().getCartData();
+    Get.find<MapController>().getMapProvine();
+    if(Get.find<AuthController>().userLoggedIn()){
 
+      Get.find<UserController>().getUserInfo().then((status) {
+        if(status.isSuccess){
+          Get.find<UserController>().getUserInfo();
+          userId = Get.find<UserController>().userModel!.id!;
+          SeverSocketIo().connect(userId);
+          Get.find<MessagesController>().getMessages();
+
+        }
+      });
+
+    }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: page[_selectedIndex],
@@ -58,15 +84,40 @@ class _MainHomePageState extends State<MainHomePage> {
         showUnselectedLabels: false,
         currentIndex: _selectedIndex,
         onTap: onTapNav,
-        items: const [
+        items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
-
             label: "home",
 
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.messenger),
+            icon: GetBuilder<AuthController>(
+              builder: (authController) {
+                return GetBuilder<MessagesController>(
+                  builder: (messagesController) {
+                    // connect(userId);
+                    return Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Icon(Icons.messenger),
+                        messagesController.listMissMessages.isNotEmpty?Positioned(
+                          right: -Dimensions.height10,
+                          top: -Dimensions.height10,
+                          child: CircleAvatar(
+                            maxRadius: Dimensions.height10,
+                            backgroundColor: Colors.red,
+                            child: SmallText(text: messagesController.listMissMessages.length.toString(),color: Colors.white),
+                          ),
+                        ):Positioned(
+                          right: 0,
+                            top: 0,
+                            child: Container()),
+                      ],
+                    );
+                  }
+                );
+              }
+            ),
             label: "mess",
           ),
           BottomNavigationBarItem(

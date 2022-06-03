@@ -30,6 +30,7 @@ class ApiClient extends GetConnect implements GetxService{
     _mainHeaders = {
       'Content-type': 'application/json; charset=UTF-8',
       // 'Content-Type':'multipart/form-data',
+      // 'Authorization': 'key=AAAAJuMHBZc:APA91bHvuk9es6StPAAfjVyEyYmttbzHKKZb2CuERwpgrcrOeKcrBBcE_sMkmZrgQveok5fn_ZYnX0tHTCNWruFkatXmbs-w3Uew4QUCjNWl3ndsJDlivUpRJuHkByxyYl4GE9Yi6Aw4',
       'Authorization': 'Bearer $token',
       'Accept': 'application/json',
     };
@@ -43,7 +44,7 @@ class ApiClient extends GetConnect implements GetxService{
 
         return response;
       }catch(e){
-        return Response(statusCode: 1, statusText: e.toString());
+        return Response(statusCode: 200, statusText: e.toString());
       }
   }
 
@@ -55,11 +56,9 @@ class ApiClient extends GetConnect implements GetxService{
     print(body.toString());
     try{
       Response response =  await post(uri, body,headers: _mainHeaders);
-      print(response.toString());
       return response;
     }catch(e){
-      print(e.toString());
-      return Response(statusCode: 1,statusText: e.toString());
+      return Response(statusCode: 200,statusText: e.toString());
     }
   }
 
@@ -70,12 +69,28 @@ class ApiClient extends GetConnect implements GetxService{
       return response;
     }catch(e){
       print(e.toString());
-      return Response(statusCode: 1,statusText: e.toString());
+      return Response(statusCode: 200,statusText: e.toString());
     }
   }
   Future<Response> putData(String uri,dynamic body) async{
     try{
       Response response =  await put(uri, body,headers: _mainHeaders);
+      print(response.toString());
+      return response;
+    }catch(e){
+      print(e.toString());
+      return Response(statusCode: 200,statusText: e.toString());
+    }
+  }
+  Future<Response> postDataNotification(String uri,dynamic body) async{
+    var mainHeaders = {
+      'Content-type': 'application/json',
+      'Authorization': 'key=AAAAJuMHBZc:APA91bHvuk9es6StPAAfjVyEyYmttbzHKKZb2CuERwpgrcrOeKcrBBcE_sMkmZrgQveok5fn_ZYnX0tHTCNWruFkatXmbs-w3Uew4QUCjNWl3ndsJDlivUpRJuHkByxyYl4GE9Yi6Aw4',
+
+    };
+
+    try{
+      Response response =  await post(uri, body,headers: mainHeaders);
       print(response.toString());
       return response;
     }catch(e){

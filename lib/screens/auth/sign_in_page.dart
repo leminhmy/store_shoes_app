@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:store_shoes_app/controller/order_controller.dart';
 import 'package:store_shoes_app/controller/user_controller.dart';
+import 'package:store_shoes_app/notificationservice/local_notification_service.dart';
 
 import 'package:store_shoes_app/screens/auth/sign_up_page.dart';
 
@@ -45,7 +46,7 @@ class _SignInPageState extends State<SignInPage> {
   }
   @override
   Widget build(BuildContext context) {
-
+    LocalNotificationService.initialize(context);
     late BuildContext dialogContext;
     Future<void> _login(AuthController authController) async {
       String email = emailController.text.trim();
@@ -77,7 +78,7 @@ class _SignInPageState extends State<SignInPage> {
                 ],
               );
             });
-       await authController.login(email, password).then((status){
+       await authController.login(email, password, deviceTokenToSendPushNotification).then((status){
           if(status.isSuccess){
             Navigator.pop(dialogContext);
             Get.toNamed(RouteHelper.getInitial());

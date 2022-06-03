@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:store_shoes_app/components/base/show_custom_snackbar.dart';
+import 'package:store_shoes_app/routes/route_helper.dart';
 import 'package:store_shoes_app/screens/home_page/components/edit_image_product.dart';
 
 import '../../../components/big_text.dart';
 import '../../../components/button_border_radius.dart';
 import '../../../components/edit_text_form.dart';
 import '../../../controller/shoes_controller.dart';
+import '../../../models/product.dart';
 import '../../../models/shoes_type.dart';
 import '../../../utils/app_contants.dart';
 import '../../../utils/colors.dart';
@@ -38,6 +40,8 @@ class EditProduct extends StatefulWidget {
 }
 
 class _EditProductState extends State<EditProduct> {
+
+  late ProductsModel productsModel;
   double _currPageValue = 0;
   bool releasedProduct = false;
   late TextEditingController name;
@@ -69,11 +73,11 @@ class _EditProductState extends State<EditProduct> {
   @override
   void initState() {
     // TODO: implement initState
+    productsModel = Get.find<ShoesController>().shoesProductList[widget.index];
     name = TextEditingController(text: Get.find<ShoesController>().shoesProductList[widget.index].name!);
     subTitle = TextEditingController(text: Get.find<ShoesController>().shoesProductList[widget.index].subTitle!);
     price = TextEditingController(text: Get.find<ShoesController>().shoesProductList[widget.index].price!.toString());
     description = TextEditingController(text: Get.find<ShoesController>().shoesProductList[widget.index].description!);
-
 
 
     pageController.addListener(() {
@@ -104,6 +108,8 @@ class _EditProductState extends State<EditProduct> {
     shoesTypeListModel.forEach((element) {
       if(element.id == Get.find<ShoesController>().shoesProductList[widget.index].typeId!){
         _selectedType = element.name!;
+        _selectedTypeInt = element.id;
+
       }
     });
 
@@ -116,7 +122,37 @@ class _EditProductState extends State<EditProduct> {
     return listData;
   }
 
+  deleteProduct(int idProduct){
 
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          dialogContext = context;
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              BigText(text: "Đang up load"),
+            ],
+          );
+        });
+
+    Get.find<ShoesController>().deleteProduct(idProduct).then((status) {
+      if(status.isSuccess){
+        Navigator.pop(dialogContext);
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Get.find<ShoesController>().getShoesProductList();
+        showCustomSnackBar("DeleteProduct success",isError: false);
+
+      }
+      else{
+        Navigator.pop(dialogContext);
+        showCustomSnackBar(status.message);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -304,7 +340,9 @@ class _EditProductState extends State<EditProduct> {
                                         content: Text("You want delete it!"),
                                         actions: [
                                           TextButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                deleteProduct(productsModel.id!);
+                                              },
                                               child: Text("Delete")),
                                           TextButton(
                                               onPressed: () {

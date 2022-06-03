@@ -30,7 +30,6 @@ class RouteHelper{
   static List<GetPage> routes =[
     GetPage(name: initial, page: ()=>MainHomePage()),
     GetPage(name: search, page: ()=>SearchPage()),
-    GetPage(name: messaging, page: ()=>MessagingPage()),
     GetPage(name: addProduct, page: ()=>AddProductPage()),
     GetPage(name: signIn, page: ()=>SignInPage(),transition: Transition.fade),
     GetPage(name: shoesDetail, page: (){

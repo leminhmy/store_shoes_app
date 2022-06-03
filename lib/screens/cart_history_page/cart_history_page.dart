@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:store_shoes_app/components/base/app_variable.dart';
 import 'package:store_shoes_app/components/base/custom_loader.dart';
+import 'package:store_shoes_app/components/border_radius_widget.dart';
 import 'package:store_shoes_app/controller/user_controller.dart';
 import 'package:store_shoes_app/models/product.dart';
 
@@ -160,12 +161,30 @@ class _CartHistoryPageState extends State<CartHistoryPage> {
   Container buildCartHistory(int i) {
     return Container(
       margin: EdgeInsets.only(bottom: Dimensions.height20),
+      decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(width: 1.0, color: Colors.grey.withOpacity(0.5)),
+          )
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Container(
+                padding: EdgeInsets.symmetric(
+                    vertical: Dimensions.height5,
+                    horizontal: Dimensions.height10),
+                decoration: BoxDecoration(
+                  color: AppColors.mainColor,
+                  borderRadius:
+                  BorderRadius.circular(Dimensions.radius15 / 3),
+                ),
+                child: BigText(text: "ID: "+getCartHistoryList[i].id.toString(),color: AppColors.redColor,),
+
+              ),
+              SizedBox(width: Dimensions.height10,),
               timeWidget(i),
               listStatusProduct[getCartHistoryList[i].status!],
             ],

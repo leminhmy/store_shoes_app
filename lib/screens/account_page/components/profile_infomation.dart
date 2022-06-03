@@ -26,19 +26,19 @@ class ProfileInfomation extends StatelessWidget {
                 IconAndTextFullContainer(
                   colorBackground: AppColors.mainColor,
                   iconData: Icons.person,
-                  text: userController.userModel!.name,
+                  text: userController.userModel!.name!,
                 ),
                 SizedBox(height: Dimensions.height20,),
                 IconAndTextFullContainer(
                   colorBackground: AppColors.iconColor1,
                   iconData: Icons.phone,
-                  text: userController.userModel!.phone,
+                  text: userController.userModel!.phone!,
                 ),
                 SizedBox(height: Dimensions.height20,),
                 IconAndTextFullContainer(
                   colorBackground: AppColors.iconColor1,
                   iconData: Icons.email,
-                  text: userController.userModel!.email,
+                  text: userController.userModel!.email!,
                 ),
                 SizedBox(height: Dimensions.height20,),
                 IconAndTextFullContainer(

@@ -5,8 +5,10 @@ import 'package:get/get.dart';
 import 'package:store_shoes_app/controller/auth_controller.dart';
 import 'package:store_shoes_app/controller/cart_controller.dart';
 import 'package:store_shoes_app/controller/map_controller.dart';
+import 'package:store_shoes_app/controller/messages_controller.dart';
 import 'package:store_shoes_app/controller/order_controller.dart';
 import 'package:store_shoes_app/controller/shoes_controller.dart';
+import 'package:store_shoes_app/severs/sever_socketio/socketio_client.dart';
 
 import '../../../components/base/app_variable.dart';
 import '../../../components/base/show_custom_snackbar.dart';
@@ -49,6 +51,11 @@ class _BottomBarCartState extends State<BottomBarCart> {
 
   String location = "";
 
+
+  //default
+  List<String> stringStatus = ["Cancel","Accpet","Finished"];
+
+
    _updateStatus(int idOrder, int statusOrder)  {
     Map map = {"message": "null"};
      Get.find<OrderController>()
@@ -56,8 +63,15 @@ class _BottomBarCartState extends State<BottomBarCart> {
         .then((status) {
       if (status.isSuccess) {
         showCustomSnackBar("Change Status Success", isError: false);
+        String messageCancel = "";
+        if(messageText != "null"){
+          messageCancel = "Messages: "+messageText;
+        }
+        Get.find<MessagesController>().sendNotification(typeNotification: "order",title: "Order id:"+orderModel.id.toString(), content: "Change to "+stringStatus[selectedIndex]+messageCancel, userId: orderModel.userId!);
+        SeverSocketIo().sendData(orderModel.userId!, "order");
         Get.find<OrderController>().getOrderList();
         selectedIndex = statusOrder;
+        messageText = "";
       } else {
         showCustomSnackBar(status.message);
       }

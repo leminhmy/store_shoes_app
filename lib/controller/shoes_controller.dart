@@ -113,6 +113,21 @@ class ShoesController extends GetxController{
 
   }
 
+  Future<ResponseModel> deleteProduct(int idProduct) async{
+    Response response = await shoesRepo.deleteProduct(idProduct.toString());
+    late ResponseModel responseModel;
+    if(response.statusCode == 200)
+    {
+      responseModel = ResponseModel(true, "Success "+response.statusText!);
+    }
+    else{
+      responseModel = ResponseModel(false, "Error "+response.statusText!);
+    }
+    update();
+    return responseModel;
+
+  }
+
 
 
   Future<void> getShoesProductList() async{

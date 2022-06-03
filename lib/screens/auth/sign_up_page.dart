@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -35,6 +36,24 @@ class _SignUpPageState extends State<SignUpPage> {
   //showpassword
   bool isShowVisibility = false;
 
+  //token_messgaes
+  String deviceTokenToSendPushNotification = "";
+
+
+  Future<void> getDeviceTokenToSendNotification() async {
+    final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+    final token = await _fcm.getToken();
+    deviceTokenToSendPushNotification = token.toString();
+    print("Token Value $deviceTokenToSendPushNotification");
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDeviceTokenToSendNotification();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -62,7 +81,7 @@ class _SignUpPageState extends State<SignUpPage> {
             title: "Password");
       } else {
         SignUpBody signUpBody = SignUpBody(
-            name: name, phone: phone, email: email, password: password);
+            name: name, phone: phone, email: email, password: password,tokenMessages: deviceTokenToSendPushNotification);
         authController.registration(signUpBody).then((status){
           if(status.isSuccess){
             print("Success registration");

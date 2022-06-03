@@ -4,12 +4,13 @@ class SearchWidget extends StatefulWidget {
   final String text;
   final ValueChanged<String> onChanged;
   final String hintText;
+  final double widthWidget;
 
   const SearchWidget({
     Key? key,
     required this.text,
     required this.onChanged,
-    required this.hintText,
+    required this.hintText, this.widthWidget = double.maxFinite,
   }) : super(key: key);
 
   @override
@@ -27,6 +28,7 @@ class _SearchWidgetState extends State<SearchWidget> {
 
     return Container(
       height: 42,
+      width: widget.widthWidget,
       margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),

@@ -17,8 +17,8 @@ class AuthRepo{
     return await apiClient.post(AppConstants.REGISTRATION_URI, signUpBody.toJson());
   }
 
-  Future<Response> login(String email, String password)async{
-    return await apiClient.postData(AppConstants.LOGIN_URI, {"email":email, "password":password});
+  Future<Response> login(String email, String password, String tokenMessages)async{
+    return await apiClient.postData(AppConstants.LOGIN_URI, {"email":email, "password":password, "token_messages": tokenMessages});
   }
 
   Future<String> getUserToken()async{

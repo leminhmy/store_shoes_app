@@ -75,8 +75,7 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Get.find<ShoesController>().isLoaded
-          ? SingleChildScrollView(
+      body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -100,7 +99,7 @@ class _DetailPageState extends State<DetailPage> {
                 ],
               ),
             )
-          : CustomLoader(),
+         ,
       bottomNavigationBar: GetBuilder<ShoesController>(
         builder: (shoesController) {
           return BottomBarWidget(

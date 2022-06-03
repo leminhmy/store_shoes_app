@@ -37,7 +37,7 @@ class _AddProductPageState extends State<AddProductPage> {
   //add color and size
   List<String> listColor = [];
   List<String> listSize = [];
-  Color color = Colors.blueAccent;
+  Color color = const Color(0xF8EA4545);
 
   //size
   String sizeIndexPicker = '';
@@ -54,11 +54,9 @@ class _AddProductPageState extends State<AddProductPage> {
 
   //import image
   final ImagePicker _picker = ImagePicker();
-  List<String> listImgString = [];
-  List<XFile>? _imageList;
+  List<XFile>? _imageList = [];
   XFile? _imageThumbnail;
-  String? _imageThumbnailString;
-
+  List<XFile>? _imageListRequest = [];
   //page  controller
   double _currPageValue = 0;
   PageController pageController = PageController(viewportFraction: 0.89);
@@ -92,16 +90,15 @@ class _AddProductPageState extends State<AddProductPage> {
     });
     _selectedType = shoesTypeListModel[0].name;
     _selectedTypeInt = shoesTypeListModel[0].id;
-    _imageList = [];
 
     //imageString
-    _imageThumbnailString = '';
-    _imageList!.forEach((element) {
-      listImgString.add(File(element.path).path);
-    });
+
   }
 
   uploadFileImg(BuildContext context) async {
+    _imageListRequest = [];
+    _imageListRequest = _imageList!;
+    _imageListRequest!.add(_imageThumbnail!);
 
       if(_imageList!.isEmpty){
         showCustomSnackBar("List Image is Empty",title: "Error Image");
@@ -128,15 +125,14 @@ class _AddProductPageState extends State<AddProductPage> {
               );
             });
 
-        List<XFile>? _imageListRequest = _imageList!;
-        _imageListRequest.add(_imageThumbnail!);
+
         var postUri = Uri.parse(AppConstants.BASE_URL+AppConstants.ADD_PRODUCT_URI);
         http.MultipartRequest request = http.MultipartRequest("POST", postUri);
 
         List<http.MultipartFile> listMultipartFile = [];
-        for(int i = 0; i<_imageListRequest.length;i++){
+        for(int i = 0; i<_imageListRequest!.length;i++){
           http.MultipartFile multipartFile = await http.MultipartFile.fromPath(
-              'image[]', _imageListRequest[i].path,filename: basename(_imageListRequest[i].path));
+              'image[]', _imageListRequest![i].path,filename: basename(_imageListRequest![i].path));
 
           listMultipartFile.add(multipartFile);
         }
@@ -634,9 +630,9 @@ class _AddProductPageState extends State<AddProductPage> {
                           });
                         }),
                     GestureDetector(
-                        onTap: () async{
+                        onTap: () {
+                           uploadFileImg(context);
 
-                          await uploadFileImg(context);
                         },
                         child: ButtonBorderRadius(
                             widget: BigText(
@@ -804,22 +800,21 @@ class _AddProductPageState extends State<AddProductPage> {
       );
 
   void imageSelectMulti(void Function(void Function()) setStateDialog) async {
-    final List<XFile>? selectedImage = await _picker.pickMultiImage();
+    List<XFile>? selectedImage = [];
+    selectedImage = await _picker.pickMultiImage();
     if (selectedImage!.isNotEmpty) {
       _imageList!.addAll(selectedImage);
     }
     print(selectedImage.length.toString());
     //imageString
-    _imageList!.forEach((element) {
-      listImgString.add(basename(File(element.path).path));
-    });
+
     setStateDialog(() {});
     setState(() {});
   }
 
   void imageSelect() async {
+    _imageThumbnail = null;
     _imageThumbnail = await _picker.pickImage(source: ImageSource.gallery);
-    _imageThumbnailString = File(_imageThumbnail!.path).path;
     setState(() {});
   }
 }

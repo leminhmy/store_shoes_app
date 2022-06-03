@@ -25,7 +25,7 @@ class _ScreenTestState extends State<ScreenTest> {
   }
 
   void connect(){
-    socket = IO.io("http://192.168.1.7:5000",<String, dynamic>{
+    socket = IO.io("https://easy-realtime-demo.herokuapp.com/",<String, dynamic>{
       "transports":["websocket"],
       "autoConnect":false,
     });
