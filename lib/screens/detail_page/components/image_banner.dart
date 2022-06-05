@@ -143,7 +143,7 @@ class _ImageBannerState extends State<ImageBanner> {
                             Get.back();
                           }
                           else{
-                            Get.toNamed(RouteHelper.getInitial());
+                            Get.back();
                           }
                         },
                         child: BorderRadiusWidget(

@@ -202,7 +202,7 @@ class _CartHistoryPageState extends State<CartHistoryPage> {
                     getCartHistoryList[i].orderItems!.length, (index) {
                   ProductsModel product = ProductsModel.fromJson(jsonDecode(
                       getCartHistoryList[i].orderItems![index].shoesDetails!));
-                  return index <= 2
+                  return index <= 1
                       ? Container(
                           height: Dimensions.height40 * 2,
                           width: Dimensions.width40 * 2,

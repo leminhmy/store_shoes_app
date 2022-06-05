@@ -31,7 +31,6 @@ class MainHomePage extends StatefulWidget {
 
 class _MainHomePageState extends State<MainHomePage> {
   int _selectedIndex = 0;
-  int? userId;
 
   List page = [
     HomePage(),
@@ -50,18 +49,12 @@ class _MainHomePageState extends State<MainHomePage> {
     // TODO: implement initState
     super.initState();
 
-    Get.find<ShoesController>().getShoesProductList();
-    Get.find<ShoesController>().getShoesTypeList();
-    Get.find<ShoesController>().getShoesTypeList();
-    Get.find<CartController>().getCartData();
-    Get.find<MapController>().getMapProvine();
     if(Get.find<AuthController>().userLoggedIn()){
 
       Get.find<UserController>().getUserInfo().then((status) {
         if(status.isSuccess){
           Get.find<UserController>().getUserInfo();
-          userId = Get.find<UserController>().userModel!.id!;
-          SeverSocketIo().connect(userId);
+
           Get.find<MessagesController>().getMessages();
 
         }
@@ -93,6 +86,7 @@ class _MainHomePageState extends State<MainHomePage> {
           BottomNavigationBarItem(
             icon: GetBuilder<AuthController>(
               builder: (authController) {
+
                 return GetBuilder<MessagesController>(
                   builder: (messagesController) {
                     // connect(userId);

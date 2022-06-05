@@ -112,7 +112,7 @@ class MessagesController extends GetxController{
   }
 
   MessagesModel getLastMessPeople(int idPeople){
-    late MessagesModel messagesModel;
+     MessagesModel messagesModel = MessagesModel(messaging: "",);
     int userId = Get.find<UserController>().userModel!.id!;
 
       _listMessages.forEach((element) {
@@ -126,16 +126,19 @@ class MessagesController extends GetxController{
 
   int getMissMessaging(int idPeople){
     int value = 0;
-     _listMissMessages.forEach((element) {
-      if(element.idSend == idPeople){
-        value++;
-      }
-    });
+    if(_listMissMessages.isNotEmpty){
+      _listMissMessages.forEach((element) {
+        if(element.idSend == idPeople){
+          value++;
+        }
+      });
+    }
     return value;
   }
 
 
   Future<http.Response> sendNotification({required String typeNotification,required String title, required String content, required int userId}) async {
+
     //save notification
     if(typeNotification == "order"){
       Map saveBody = {

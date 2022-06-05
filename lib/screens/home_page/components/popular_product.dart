@@ -236,9 +236,7 @@ class _PopularProductsState extends State<PopularProducts> {
                 ),
               );
             }),
-          ):SizedBox(
-          height: Dimensions.height50*5,
-            child: NoDataPage(text: "Popular is Empty")),
+          ):NoDataPage(text: "Popular is Empty"),
         ],
       ),
     );

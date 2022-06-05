@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:store_shoes_app/components/big_text.dart';
 import 'package:store_shoes_app/controller/order_controller.dart';
 import 'package:store_shoes_app/controller/shoes_controller.dart';
 import 'package:store_shoes_app/models/cart_model.dart';
@@ -63,14 +64,19 @@ class _ListCartState extends State<ListCart> {
       return _cartList.isNotEmpty?Padding(
         padding: const EdgeInsets.all(5),
         child: Column(
-          children: List.generate(
-            _cartList.length,
-                (index) =>
-                GestureDetector(
-                  onTap: (){
-                  },
-                    child: CartItem(page: widget.page,cartModel: _cartList[index])),
-          ),
+          children: [
+            widget.page == "carthistory"?BigText(text: "Địa Chỉ: "+ Get.find<OrderController>().order[widget.index].address!):Container(),
+            Column(
+              children: List.generate(
+                _cartList.length,
+                    (index) =>
+                    GestureDetector(
+                      onTap: (){
+                      },
+                        child: CartItem(page: widget.page,cartModel: _cartList[index])),
+              ),
+            ),
+          ],
         ),
       ):NoDataPage(text: "Your cart is empty");
     });

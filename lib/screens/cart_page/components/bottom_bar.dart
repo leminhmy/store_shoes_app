@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:store_shoes_app/components/base/custom_loader.dart';
 import 'package:store_shoes_app/controller/auth_controller.dart';
 import 'package:store_shoes_app/controller/cart_controller.dart';
 import 'package:store_shoes_app/controller/map_controller.dart';
@@ -42,7 +43,6 @@ class _BottomBarCartState extends State<BottomBarCart> {
   late TextEditingController address;
   TextEditingController message = TextEditingController(text: "null");
   late BuildContext dialogLoadingContext;
-  late String messageText;
 
   //dropmenu address
   String? selectedItemDistrict;
@@ -57,21 +57,24 @@ class _BottomBarCartState extends State<BottomBarCart> {
 
 
    _updateStatus(int idOrder, int statusOrder)  {
-    Map map = {"message": "null"};
+     String maptext = "null";
+     if(message.value.text != "null"){
+       maptext= message.value.text;
+     }
+    Map map = {"message": maptext};
      Get.find<OrderController>()
         .updateStatusOrder(idOrder, statusOrder, map)
         .then((status) {
       if (status.isSuccess) {
         showCustomSnackBar("Change Status Success", isError: false);
         String messageCancel = "";
-        if(messageText != "null"){
-          messageCancel = "Messages: "+messageText;
+        if(message.value.text != "null"){
+          messageCancel = "Messages: "+message.value.text;
         }
         Get.find<MessagesController>().sendNotification(typeNotification: "order",title: "Order id:"+orderModel.id.toString(), content: "Change to "+stringStatus[selectedIndex]+messageCancel, userId: orderModel.userId!);
         SeverSocketIo().sendData(orderModel.userId!, "order");
         Get.find<OrderController>().getOrderList();
         selectedIndex = statusOrder;
-        messageText = "";
       } else {
         showCustomSnackBar(status.message);
       }
@@ -81,7 +84,6 @@ class _BottomBarCartState extends State<BottomBarCart> {
   @override
   void initState() {
     // TODO: implement initState
-    messageText = "null";
     selectedIndex = 3;
     address = TextEditingController(text: "");
     if (widget.page == "carthistory") {
@@ -251,7 +253,7 @@ class _BottomBarCartState extends State<BottomBarCart> {
                                                   SizedBox(
                                                     height: Dimensions.height10,
                                                   ),
-                                                  DropdownButtonFormField<
+                                                  mapController.mapDistrict.isNotEmpty?DropdownButtonFormField<
                                                       String>(
                                                     iconEnabledColor:
                                                         AppColors.mainColor,
@@ -336,11 +338,11 @@ class _BottomBarCartState extends State<BottomBarCart> {
                                                         value: item.name,
                                                       );
                                                     }).toList(),
-                                                  ),
+                                                  ):CustomLoader(),
                                                   SizedBox(
                                                     height: Dimensions.height10,
                                                   ),
-                                                  DropdownButtonFormField<
+                                                  mapController.mapCommune.isNotEmpty?DropdownButtonFormField<
                                                       String>(
                                                     iconEnabledColor:
                                                         AppColors.mainColor,
@@ -414,7 +416,7 @@ class _BottomBarCartState extends State<BottomBarCart> {
                                                         value: item.name,
                                                       );
                                                     }).toList(),
-                                                  ),
+                                                  ):CustomLoader(),
                                                   SizedBox(
                                                     height: Dimensions.height10,
                                                   ),
@@ -503,6 +505,8 @@ class _BottomBarCartState extends State<BottomBarCart> {
                                                               .then((status) {
                                                             if (status
                                                                 .isSuccess) {
+                                                              Get.find<MessagesController>().sendNotification(typeNotification: "order",title: "Order new:", content: "Address: "+location, userId: Get.find<UserController>().listUsers[0].id!);
+                                                              SeverSocketIo().sendData(Get.find<UserController>().listUsers[0].id!, "order");
                                                               Navigator.pop(
                                                                   dialogLoadingContext);
                                                               showCustomSnackBar(
@@ -671,8 +675,6 @@ class _BottomBarCartState extends State<BottomBarCart> {
                                                         child: Text("Change"),
                                                         onPressed: () {
                                                           setState(() {
-                                                            messageText =
-                                                                message.value.text;
                                                             selectedIndex = index;
                                                           });
                                                           Get.back();
@@ -680,6 +682,7 @@ class _BottomBarCartState extends State<BottomBarCart> {
                                                       ),
                                                       TextButton(
                                                           onPressed: () {
+                                                            message = TextEditingController(text: "null");
                                                             Navigator.pop(context);
                                                           },
                                                           child: Text("Cancel")),

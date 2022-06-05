@@ -4,12 +4,12 @@ class AppConstants{
 
 
   //product
-  static const String BASE_URL = "http://192.168.1.21/";
+  static const String BASE_URL = "https://leminhmy.ml/";
   static const String UPLOAD_URL = "uploads/";
   static const String LEATHER_PRODUCT_URI = "api/v1/products/leather";
   static const String SHOES_PRODUCT_URI = "api/v1/products/shoes";
   static const String SHOES_TYPE_URI = "api/v1/products/shoes-types";
-  static const String SHOES_UPDATE = "api/v1/products/update";
+  static const String SHOES_UPDATE = "api/v1/adproducts/update";
 
 
   //auth and user end points
@@ -25,8 +25,8 @@ class AppConstants{
 
 
   //uploadfile
-  static const String UPLOAD_FILE_URI = "api/v1/products/uploadfile";
-  static const String ADD_PRODUCT_URI = "api/v1/products/add";
+  static const String UPLOAD_FILE_URI = "api/v1/adproducts/uploadfile";
+  static const String ADD_PRODUCT_URI = "api/v1/adproducts/add";
 
   //messages
 
@@ -62,6 +62,6 @@ class AppConstants{
 
 
   //delete
-  static const String PRODUCT_DELETE_URL = "api/v1/products/delete";
+  static const String PRODUCT_DELETE_URL = "api/v1/adproducts/delete";
 
 }

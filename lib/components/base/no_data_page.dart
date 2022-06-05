@@ -15,7 +15,6 @@ class NoDataPage extends StatelessWidget {
           Image.asset(image,
             height: MediaQuery.of(context).size.height*0.22,
             width: MediaQuery.of(context).size.width*0.22,
-            fit: BoxFit.cover,
           ),
           SizedBox(height: MediaQuery.of(context).size.height*0.03),
           Text(

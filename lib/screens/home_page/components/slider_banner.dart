@@ -4,6 +4,8 @@ import 'package:store_shoes_app/controller/shoes_controller.dart';
 import 'package:store_shoes_app/models/product.dart';
 
 import '../../../components/base/app_variable.dart';
+import '../../../components/base/custom_loader.dart';
+import '../../../components/base/no_data_page.dart';
 import '../../../components/big_text.dart';
 import '../../../components/icon_and_text.dart';
 import '../../../components/small_text.dart';
@@ -56,9 +58,9 @@ class _SliderBannerState extends State<SliderBanner> {
 
       builder: (shoesController) {
         shoesProduct = Get.find<ShoesController>().shoesProductList;
-        return Column(
+        return shoesController.isLoaded?Column(
           children: [
-            SizedBox(
+            shoesProduct.isNotEmpty?SizedBox(
               height: Dimensions.pageView,
               child: PageView.builder(
                   controller: pageController,
@@ -68,10 +70,10 @@ class _SliderBannerState extends State<SliderBanner> {
                   itemBuilder: (context, index) {
                     return _buildSliderBannerCard(index,shoesProduct[index]);
                   }),
-            ),
+            ):NoDataPage(text: "Product is Empty"),
             buildDotsIndicator(),
           ],
-        );
+        ):CustomLoader();
       }
     );
   }

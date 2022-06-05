@@ -23,6 +23,7 @@ class AccountPage extends StatelessWidget {
     }
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         elevation: 0,
         toolbarHeight: Dimensions.height50 * 1.5,
         backgroundColor: AppColors.mainColor,

@@ -32,7 +32,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getData();
   }
   @override
   Widget build(BuildContext context) {
@@ -40,8 +39,11 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       body: RefreshIndicator(
+        backgroundColor: Colors.yellow,
         onRefresh: getData,
-        child: GetBuilder<ShoesController>(
+        child: ListView(
+          children: [
+            GetBuilder<ShoesController>(
           builder: (shoesController) {
             return SingleChildScrollView(
               child: Padding(
@@ -61,12 +63,14 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       height: Dimensions.height10,
                     ),
-                    shoesController.shoesProductList.isNotEmpty?PopularProducts(shoesProduct: shoesController.listFilterShoes,):CustomLoader(),
+                    shoesController.isLoaded?PopularProducts(shoesProduct: shoesController.listFilterShoes,):CustomLoader(),
                   ],
                 ),
               ),
             );
           }
+        )
+          ],
         ),
       ),
     );

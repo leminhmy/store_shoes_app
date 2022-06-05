@@ -11,6 +11,7 @@ import 'package:store_shoes_app/notificationservice/local_notification_service.d
 import 'package:store_shoes_app/routes/route_helper.dart';
 
 import 'package:get/get.dart';
+import 'package:store_shoes_app/severs/sever_socketio/socketio_client.dart';
 
 import 'controller/cart_controller.dart';
 import 'controller/user_controller.dart';
@@ -56,7 +57,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LocalNotificationService.initialize(context);
-
+    Get.find<ShoesController>().getShoesProductList();
+    Get.find<ShoesController>().getShoesTypeList();
+    Get.find<CartController>().getCartData();
+    Get.find<MapController>().getMapProvine();
 
     return GetBuilder<MapController>(
       builder: (_) {
@@ -68,6 +72,7 @@ class MyApp extends StatelessWidget {
                   builder: (_) {
                     return GetBuilder<UserController>(
                         builder: (_) {
+
                           return GetBuilder<OrderController>(
                               builder: (_) {
                                 return GetBuilder<MessagesController>(

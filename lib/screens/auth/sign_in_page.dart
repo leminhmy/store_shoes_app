@@ -84,6 +84,7 @@ class _SignInPageState extends State<SignInPage> {
             Get.toNamed(RouteHelper.getInitial());
             Get.find<OrderController>().getOrderList();
             Get.find<UserController>().getUserInfo();
+
             print("Login success");
           }else{
             Navigator.pop(dialogContext);

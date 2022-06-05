@@ -21,7 +21,6 @@ import '../cart_history_page/cart_history_page.dart';
 import 'components/messaging_cart.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class MessagingPage extends StatefulWidget {
   const MessagingPage({Key? key, required this.userTake, required this.userModel}) : super(key: key);
@@ -50,15 +49,11 @@ class _MessagingPageState extends State<MessagingPage> {
   late BuildContext dialogContext;
 
   //socketio
-  late final IO.Socket socket;
 
   @override
   void initState() {
     // TODO: implement initState
-    socket = IO.io(AppConstants.SOCKETIO_URI,<String, dynamic>{
-      "transports":["websocket"],
-      "autoConnect":false,
-    });
+
     super.initState();
 
     fileImageSend = null;
@@ -70,7 +65,7 @@ class _MessagingPageState extends State<MessagingPage> {
       Get.find<MessagesController>().getMissMessages();
       userId = Get.find<UserController>().userModel!.id!;
       Get.find<MessagesController>().getMessages();
-      SeverSocketIo().connect(userId);
+
     }
   }
 
@@ -123,8 +118,7 @@ class _MessagingPageState extends State<MessagingPage> {
       }
       http.StreamedResponse response = await request.send();
       if (response.statusCode == 200) {
-        SeverSocketIo().sendData(userTake!, "message");
-        // sendData(userTake!);
+        SeverSocketIo().sendData(widget.userModel.id!, "message");
         Get.find<MessagesController>().sendNotification(typeNotification: "messaging",title: "Messages",content: messaging, userId: widget.userModel.id!);
         Navigator.pop(dialogContext);
         fileImage = null;
@@ -144,28 +138,7 @@ class _MessagingPageState extends State<MessagingPage> {
     }
   }
 
-  //realtime with socketio sever web haruko
 
-
-  // void sendData(int id){
-  //   socket.emit("message",{"idTake":id});
-  // }
-
-  // void connect(dynamic userId){
-  //
-  //   socket.connect();
-  //   socket.emit("signin",userId);
-  //   socket.onConnect((data) {
-  //     print("Connected");
-  //     socket.on("message", (msg) {
-  //       Get.find<MessagesController>().getMessages();
-  //       Get.find<MessagesController>().getMissMessages();
-  //
-  //       // print(msg);
-  //     });
-  //   });
-  //   print(socket.connected);
-  // }
 
 
 
@@ -402,6 +375,7 @@ class _MessagingPageState extends State<MessagingPage> {
       actions: [
         IconButton(
             onPressed: () {
+
             },
             icon: Icon(Icons.local_phone)),
         IconButton(

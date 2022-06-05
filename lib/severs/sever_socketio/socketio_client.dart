@@ -9,7 +9,7 @@ import '../../utils/app_contants.dart';
 
 class SeverSocketIo {
 
-   IO.Socket socket = IO.io("http://192.168.1.21:5000",<String, dynamic>{
+  static IO.Socket socket = IO.io(AppConstants.SOCKETIO_URI,<String, dynamic>{
     "transports":["websocket"],
     "autoConnect":false,
   });
