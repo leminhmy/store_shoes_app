@@ -129,7 +129,6 @@ class ShoesController extends GetxController{
   }
 
 
-
   Future<void> getShoesProductList() async{
     _isLoaded = false;
     Response response = await shoesRepo.getShoesProductList();
@@ -142,7 +141,11 @@ class ShoesController extends GetxController{
         setListFilterShoes();
       }
     else{
-      print("get shoes product error");
+      // print("get shoes product error");
+      // return await Future.delayed(const Duration(seconds: 20),(){
+      //   print("Reload get data product then duration 20 seconds SUCCESS");
+      //   getShoesProductList();
+      // });
     }
 
    /* _shoesProductList.forEach((element) {

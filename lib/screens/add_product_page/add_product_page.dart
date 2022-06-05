@@ -13,6 +13,7 @@ import '../../components/button_border_radius.dart';
 import '../../components/edit_text_form.dart';
 import '../../components/icon_background_border_radius.dart';
 import '../../controller/shoes_controller.dart';
+import '../../data/api/api_client.dart';
 import '../../models/shoes_type.dart';
 import '../../utils/app_contants.dart';
 import '../../utils/colors.dart';
@@ -95,9 +96,10 @@ class _AddProductPageState extends State<AddProductPage> {
 
   }
 
+
   uploadFileImg(BuildContext context) async {
     _imageListRequest = [];
-    _imageListRequest = _imageList!;
+    _imageListRequest!.addAll(_imageList!);
     _imageListRequest!.add(_imageThumbnail!);
 
       if(_imageList!.isEmpty){
@@ -136,6 +138,8 @@ class _AddProductPageState extends State<AddProductPage> {
 
           listMultipartFile.add(multipartFile);
         }
+        ApiClient apiClient = ApiClient(appBaseUrl: AppConstants.BASE_URL,sharedPreferences: Get.find());
+        request.headers.addAll(apiClient.mainHeaders);
         request.files.addAll(listMultipartFile);
         request.fields['name'] = name.value.text;
         request.fields['sub_title'] = subTitle.value.text;
@@ -159,9 +163,12 @@ class _AddProductPageState extends State<AddProductPage> {
 
         }
         else{
-          Navigator.pop(dialogContext);
 
-          showCustomSnackBar("Error Upload Img Success",);
+          Navigator.pop(dialogContext);
+          if(response.statusCode == 500){
+            showCustomSnackBar("Error form sever| Your account not Admin or code BE",);
+          }
+          showCustomSnackBar("Error Upload Img by Internet",);
         }
         setState(() {
 

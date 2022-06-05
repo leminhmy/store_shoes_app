@@ -18,6 +18,7 @@ import 'package:store_shoes_app/utils/dimensions.dart';
 import '../../components/search_widget.dart';
 import '../../controller/auth_controller.dart';
 import '../../models/messages.dart';
+import '../../severs/sever_socketio/socketio_client.dart';
 import '../../utils/app_contants.dart';
 import '../../utils/time_ago.dart';
 
@@ -39,21 +40,27 @@ class _MessagesPageState extends State<MessagesPage> {
     // TODO: implement initState
     super.initState();
     if (Get.find<AuthController>().userLoggedIn()) {
-      Get.find<UserController>().getUserInfo();
-      //funtion affter your login
+      Get.find<UserController>().getUserInfo().then((status) {
+        if(status.isSuccess){
+          //funtion affter your login
+          Get.find<MessagesController>().getMessages();
+          Get.find<MessagesController>().getMissMessages();
+          if (Get.find<UserController>().userModel!.status == 1) {
+            Get.find<UserController>().getListAdmin();
+            print("1");
+          } else if (Get.find<UserController>().userModel!.status == 2) {
+            Get.find<UserController>().getListUsers();
+            print("2");
+          }
+          listMessages = Get.find<UserController>().listUsers;
+          Get.find<NotificationController>().getNotification();
+          SeverSocketIo().connect(Get.find<UserController>().userModel!.id);
 
-      Get.find<MessagesController>().getMessages();
-      Get.find<MessagesController>().getMissMessages();
-      if (Get.find<UserController>().userModel!.status == 1) {
-        Get.find<UserController>().getListAdmin();
-        print("1");
-      } else if (Get.find<UserController>().userModel!.status == 2) {
-        Get.find<UserController>().getListUsers();
-        print("2");
-      }
-      listMessages = Get.find<UserController>().listUsers;
-      Get.find<NotificationController>().getNotification();
-      setState(() {});
+
+          setState(() {});
+        }
+      });
+
     }
   }
 
@@ -75,21 +82,28 @@ class _MessagesPageState extends State<MessagesPage> {
     MessagesModel messagesModel = Get.find<MessagesController>()
         .getLastMessPeople(listMessages![index].id!);
 
-    var outputDate = DateTime.now().toString();
-    DateTime parseDate =
-        DateFormat("yyyy-MM-dd HH:mm:ss").parse(messagesModel.updatedAt!);
-    var inputDate = DateTime.parse(parseDate.toString());
-    var outputFormat = DateFormat("MM/dd/yyyy hh:mm a");
-    outputDate = outputFormat.format(inputDate);
+    if(messagesModel.updatedAt != null){
+      var outputDate = DateTime.now().toString();
+      DateTime parseDate =
+      DateFormat("yyyy-MM-dd HH:mm:ss").parse(messagesModel.updatedAt!);
+      var inputDate = DateTime.parse(parseDate.toString());
+      var outputFormat = DateFormat("MM/dd/yyyy hh:mm a");
+      outputDate = outputFormat.format(inputDate);
 
-    return SmallText(text: TimeAgo.timeAgoSinceDate(parseDate));
+      return SmallText(text: TimeAgo.timeAgoSinceDate(parseDate));
+    }
+    return SmallText(text: "");
+
   }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<UserController>(builder: (userController) {
-      listMessages = userController.listUsers;
-      return Scaffold(
+      if(userController.listUsers.isNotEmpty){
+        listMessages = userController.listUsers;
+      }
+
+      return userController.userModel != null?Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Colors.green,
@@ -113,7 +127,7 @@ class _MessagesPageState extends State<MessagesPage> {
           actions: [
             GetBuilder<NotificationController>(
                 builder: (notificationController) {
-              return Stack(
+              return notificationController.listNotification.isNotEmpty?Stack(
                 children: [
                   IconButton(
                       onPressed: () {
@@ -124,8 +138,7 @@ class _MessagesPageState extends State<MessagesPage> {
                         Icons.notifications_active,
                         color: Colors.white,
                       )),
-                  notificationController.listNotification.isNotEmpty
-                      ? Positioned(
+                  Positioned(
                           right: 0,
                           top: 0,
                           child: CircleAvatar(
@@ -138,16 +151,17 @@ class _MessagesPageState extends State<MessagesPage> {
                                 color: Colors.white),
                           ),
                         )
-                      : Positioned(right: 0, top: 0, child: Container()),
+
                 ],
-              );
+              ):Icon(Icons.notifications);
             })
           ],
         ),
         body: Get.find<AuthController>().userLoggedIn()
             ? GetBuilder<MessagesController>(builder: (messagesController) {
+              print(messagesController.listMessages.length);
                 return listMessages!.isNotEmpty
-                    ? Padding(
+                    ?Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: Dimensions.height20,
                             vertical: Dimensions.height10),
@@ -238,6 +252,7 @@ class _MessagesPageState extends State<MessagesPage> {
                                                 SizedBox(
                                                   height: Dimensions.height5,
                                                 ),
+
                                                 messagesController
                                                             .getMissMessaging(
                                                                 listMessages![
@@ -303,7 +318,7 @@ class _MessagesPageState extends State<MessagesPage> {
                     : const CustomLoader();
               })
             : choosseSignin(),
-      );
+      ):CustomLoader();
     });
   }
 }

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../data/repository/user_repo.dart';
 import '../models/responseModel.dart';
 import '../models/user_model.dart';
+import '../severs/sever_socketio/socketio_client.dart';
 
 
 
@@ -30,14 +31,18 @@ class UserController extends GetxController implements GetxService {
 
 
   Future<ResponseModel> getUserInfo() async {
-
+    _userIsAdmin = false;
     Response response = await userRepo.getUserInfo();
     late ResponseModel responseModel;
     if (response.statusCode == 200) {
       _userModel = UserModel.fromJson(response.body);
       if(_userModel!.status == 2){
         _userIsAdmin = true;
+      }else{
+        _userIsAdmin = false;
       }
+
+
       _isLoading = true;
       responseModel = ResponseModel(true, "successfully");
     } else {
