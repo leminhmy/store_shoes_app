@@ -56,7 +56,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-
+    late BuildContext dialogContext;
 
     void _registration(AuthController authController) {
       String name = nameController.text.trim();
@@ -80,13 +80,29 @@ class _SignUpPageState extends State<SignUpPage> {
         showCustomSnackBar("Password can not be less than six character",
             title: "Password");
       } else {
+
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              dialogContext = context;
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  BigText(text: "Đang login"),
+                ],
+              );
+            });
         SignUpBody signUpBody = SignUpBody(
             name: name, phone: phone, email: email, password: password,tokenMessages: deviceTokenToSendPushNotification);
         authController.registration(signUpBody).then((status){
           if(status.isSuccess){
+            Navigator.pop(dialogContext);
             print("Success registration");
             Get.offNamed(RouteHelper.getInitial());
           }else{
+            Navigator.pop(dialogContext);
             showCustomSnackBar(status.message);
           }
         });
