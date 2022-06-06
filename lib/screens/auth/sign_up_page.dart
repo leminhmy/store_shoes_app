@@ -94,7 +94,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ],
               );
             });
-        SignUpBody signUpBody = SignUpBody(
+        SignUpBody signUpBody = SignUpBody(image: "",
             name: name, phone: phone, email: email, password: password,tokenMessages: deviceTokenToSendPushNotification);
         authController.registration(signUpBody).then((status){
           if(status.isSuccess){
