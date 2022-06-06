@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:store_shoes_app/components/base/show_custom_snackbar.dart';
+import 'package:store_shoes_app/routes/route_helper.dart';
 import 'package:store_shoes_app/screens/home_page/components/edit_image_product.dart';
 
 import '../../../components/big_text.dart';
 import '../../../components/button_border_radius.dart';
 import '../../../components/edit_text_form.dart';
 import '../../../controller/shoes_controller.dart';
+import '../../../models/product.dart';
 import '../../../models/shoes_type.dart';
 import '../../../utils/app_contants.dart';
 import '../../../utils/colors.dart';
@@ -38,6 +40,8 @@ class EditProduct extends StatefulWidget {
 }
 
 class _EditProductState extends State<EditProduct> {
+
+  late ProductsModel productsModel;
   double _currPageValue = 0;
   bool releasedProduct = false;
   late TextEditingController name;
@@ -48,6 +52,8 @@ class _EditProductState extends State<EditProduct> {
    List<String> listImg = [];
   String listImgApi = '';
   String listImgApiBase = '';
+  String listColorApi = '';
+  String listSizeApi = '';
    List<String> listColor = [];
    List<String> listSize = [];
   late Color color;
@@ -60,17 +66,18 @@ class _EditProductState extends State<EditProduct> {
 
   String sizeIndexPicker = '';
   final pickItemsSize = [];
+  late BuildContext dialogContext;
 
   PageController pageController = PageController(viewportFraction: 0.89);
 
   @override
   void initState() {
     // TODO: implement initState
+    productsModel = Get.find<ShoesController>().shoesProductList[widget.index];
     name = TextEditingController(text: Get.find<ShoesController>().shoesProductList[widget.index].name!);
     subTitle = TextEditingController(text: Get.find<ShoesController>().shoesProductList[widget.index].subTitle!);
     price = TextEditingController(text: Get.find<ShoesController>().shoesProductList[widget.index].price!.toString());
     description = TextEditingController(text: Get.find<ShoesController>().shoesProductList[widget.index].description!);
-
 
 
     pageController.addListener(() {
@@ -80,10 +87,8 @@ class _EditProductState extends State<EditProduct> {
     super.initState();
     listImgApiBase = Get.find<ShoesController>().shoesProductList[widget.index].listimg!;
     listImgApi = listImgApiBase.substring(0,listImgApiBase.length - 1);
-    String listColorApi =
-        Get.find<ShoesController>().shoesProductList[widget.index].color!;
-    String listSizeApi =
-        Get.find<ShoesController>().shoesProductList[widget.index].size!;
+    listColorApi = Get.find<ShoesController>().shoesProductList[widget.index].color!;
+    listSizeApi = Get.find<ShoesController>().shoesProductList[widget.index].size!;
     listImg = convertDataStringToList(listImgApi);
     listColor = convertDataStringToList(listColorApi);
     listSize = convertDataStringToList(listSizeApi);
@@ -103,6 +108,8 @@ class _EditProductState extends State<EditProduct> {
     shoesTypeListModel.forEach((element) {
       if(element.id == Get.find<ShoesController>().shoesProductList[widget.index].typeId!){
         _selectedType = element.name!;
+        _selectedTypeInt = element.id;
+
       }
     });
 
@@ -115,7 +122,37 @@ class _EditProductState extends State<EditProduct> {
     return listData;
   }
 
+  deleteProduct(int idProduct){
 
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          dialogContext = context;
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              BigText(text: "Đang up load"),
+            ],
+          );
+        });
+
+    Get.find<ShoesController>().deleteProduct(idProduct).then((status) {
+      if(status.isSuccess){
+        Navigator.pop(dialogContext);
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Get.find<ShoesController>().getShoesProductList();
+        showCustomSnackBar("DeleteProduct success",isError: false);
+
+      }
+      else{
+        Navigator.pop(dialogContext);
+        showCustomSnackBar(status.message);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,14 +169,46 @@ class _EditProductState extends State<EditProduct> {
     };
 
     Future<void> updateProduct(ShoesController shoesController)async{
+      if(name.value.text == ""){
+        showCustomSnackBar("Name is Empty",title: "Error Name");
+      }else if(subTitle.value.text == ""){
+        showCustomSnackBar("SubTitle is Empty",title: "Error Subtitle");
+      }else if(price.value.text == ""){
+        showCustomSnackBar("price is Empty",title: "Error price");
+      }else if(description.value.text == ""){
+        showCustomSnackBar("description is Empty",title: "Error description");
+      }
+      else if(listColor.isEmpty){
+        showCustomSnackBar("Color is Empty",title: "Error Color");
+      }else if(listSize.isEmpty){
+        showCustomSnackBar("Size is Empty",title: "Error Size");
+      }
+      else{
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              dialogContext = context;
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  BigText(text: "Đang up load"),
+                ],
+              );
+            });
 
       await shoesController.updateProduct(shoesController.shoesProductList[widget.index].id.toString(), mapPostData).then((status){
         if(status.isSuccess){
+          Navigator.pop(dialogContext);
           showCustomSnackBar("Update Product Success",isError: false);
+          Get.find<ShoesController>().shoesProductList;
         }else{
+          Navigator.pop(dialogContext);
           showCustomSnackBar("Error Update: "+ status.message,);
         }
       });
+      }
     }
 
 
@@ -271,7 +340,9 @@ class _EditProductState extends State<EditProduct> {
                                         content: Text("You want delete it!"),
                                         actions: [
                                           TextButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                deleteProduct(productsModel.id!);
+                                              },
                                               child: Text("Delete")),
                                           TextButton(
                                               onPressed: () {
@@ -566,48 +637,52 @@ class _EditProductState extends State<EditProduct> {
                             showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return Center(
-                                    child: SizedBox(
-                                      height: Dimensions.height50 * 10,
-                                      child: AlertDialog(
-                                        title: Text('Pick Your Size'),
-                                        content: Column(
-                                          children: [
-                                            buildSizePicker(),
-                                            Row(
+                                  return StatefulBuilder(
+                                    builder: (context,setStateDialog) {
+                                      return Center(
+                                        child: SizedBox(
+                                          height: Dimensions.height50 * 10,
+                                          child: AlertDialog(
+                                            title: Text('Pick Your Size'),
+                                            content: Column(
                                               children: [
-                                                BigText(
-                                                  text: "Add: ",
-                                                  color: Colors.black,
+                                                buildSizePicker(setStateDialog),
+                                                Row(
+                                                  children: [
+                                                    BigText(
+                                                      text: "Add: ",
+                                                      color: Colors.black,
+                                                    ),
+                                                    SizedBox(
+                                                      width: Dimensions.height10,
+                                                    ),
+                                                    BigText(
+                                                        text: "Size " +
+                                                            sizeIndexPicker),
+                                                  ],
                                                 ),
-                                                SizedBox(
-                                                  width: Dimensions.height10,
+                                                TextButton(
+                                                  child: BigText(
+                                                    text: "SELECT",
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                    if (checkWasValue(listSize,
+                                                        sizeIndexPicker)) {
+                                                      showCustomSnackBar(
+                                                          "Error: Size already exists");
+                                                    } else {
+                                                      listSize.add(sizeIndexPicker);
+                                                      setState(() {});
+                                                    }
+                                                  },
                                                 ),
-                                                BigText(
-                                                    text: "Size " +
-                                                        sizeIndexPicker),
                                               ],
                                             ),
-                                            TextButton(
-                                              child: BigText(
-                                                text: "SELECT",
-                                              ),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                                if (checkWasValue(listSize,
-                                                    sizeIndexPicker)) {
-                                                  showCustomSnackBar(
-                                                      "Error: Size already exists");
-                                                } else {
-                                                  listSize.add(sizeIndexPicker);
-                                                  setState(() {});
-                                                }
-                                              },
-                                            ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    ),
+                                      );
+                                    }
                                   );
                                 });
                           },
@@ -656,21 +731,21 @@ class _EditProductState extends State<EditProduct> {
     });
   }
 
-  buildSizePicker() {
+  buildSizePicker(void Function(void Function()) setStateDialog) {
     return Expanded(
       child: CupertinoPicker(
         itemExtent: 50,
         onSelectedItemChanged: (index) {
-          setState(() {
+          setStateDialog(() {
             sizeIndexPicker = pickItemsSize[index];
           });
         },
         children: pickItemsSize
             .map((item) => Center(
-                  child: BigText(
-                    text: item,
-                  ),
-                ))
+          child: BigText(
+            text: item,
+          ),
+        ))
             .toList(),
       ),
     );

@@ -14,8 +14,10 @@ import 'package:get/get.dart';
 
 class HearderAppBar extends StatelessWidget {
   const HearderAppBar({
-    Key? key,
+    Key? key, required this.namePage,
   }) : super(key: key);
+
+  final String namePage;
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +30,15 @@ class HearderAppBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           BigText(
-            text: "Cart Hisstory",
+            text: namePage,
             color: Colors.white,
           ),
           IconBackgroundBorderRadius(
             icon: Icons.shopping_cart_outlined,
             press: () {
               Get.toNamed(RouteHelper.getCartPage("cartpage",));
+              // Get.find<CartController>().getItemsTest;
+              // Get.find<CartController>().clear();
             },
             size: Dimensions.width20,
           ),

@@ -25,6 +25,8 @@ class Order{
   int? orderAmount;
   int? phone;
   int? status;
+  String? address;
+  String? message;
   String? createdAt;
   String? updatedAt;
   List<OrderModel>? orderItems;
@@ -35,6 +37,7 @@ class Order{
     this.orderAmount,
     this.phone,
     this.status,
+    this.message,
     this.createdAt,
     this.updatedAt,
     this.orderItems,
@@ -46,6 +49,8 @@ class Order{
     orderAmount = json['order_amount'];
     phone = json['phone'];
     status = json['status'];
+    address = json['address'];
+    message = json['message'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     if (json['order_items'] != null) {
@@ -64,6 +69,8 @@ class Order{
       "orderAmount": this.orderAmount,
       "phone": this.phone,
       "status": this.status,
+      "address": this.address,
+      "message": this.message,
       "createdAt": this.createdAt,
       "updatedAt": this.updatedAt,
     };

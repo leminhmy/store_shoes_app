@@ -20,6 +20,7 @@ class EditTextForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+
         controller: controller,
         minLines: minLines, // any number you need (It works as the rows for the textarea)
         keyboardType: textInputType,

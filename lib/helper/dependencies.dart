@@ -2,11 +2,17 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_shoes_app/controller/auth_controller.dart';
 import 'package:store_shoes_app/controller/leather_product_controller.dart';
+import 'package:store_shoes_app/controller/map_controller.dart';
+import 'package:store_shoes_app/controller/messages_controller.dart';
+import 'package:store_shoes_app/controller/notification_controller.dart';
 import 'package:store_shoes_app/controller/order_controller.dart';
 import 'package:store_shoes_app/controller/shoes_controller.dart';
 import 'package:store_shoes_app/data/api/api_client.dart';
 import 'package:store_shoes_app/data/repository/auth_repo.dart';
 import 'package:store_shoes_app/data/repository/leather_shoes_prouct_repo.dart';
+import 'package:store_shoes_app/data/repository/map_json_repo.dart';
+import 'package:store_shoes_app/data/repository/messages_repo.dart';
+import 'package:store_shoes_app/data/repository/notification_repo.dart';
 import 'package:store_shoes_app/data/repository/order_repo.dart';
 import 'package:store_shoes_app/data/repository/shoes_repo.dart';
 import 'package:store_shoes_app/utils/app_contants.dart';
@@ -31,6 +37,9 @@ Future<void> init() async{
   Get.lazyPut(() => CartRepo(sharedPreferences: Get.find()));
   Get.lazyPut(() => UserRepo(apiClient: Get.find()));
   Get.lazyPut(() => OrderRepo(apiClient: Get.find()));
+  Get.lazyPut(() => MessagesRepo(apiClient: Get.find()));
+  Get.lazyPut(() => MapJsonRepo(apiClient: Get.find()));
+  Get.lazyPut(() => NotificationRepo(apiClient: Get.find()));
 
   //controller
   Get.lazyPut(() => ShoesController(shoesRepo: Get.find()));
@@ -39,4 +48,8 @@ Future<void> init() async{
   Get.lazyPut(() => AuthController(authRepo: Get.find()));
   Get.lazyPut(() => CartController(cartRepo: Get.find()));
   Get.lazyPut(() => OrderController(orderRepo: Get.find()));
+  Get.lazyPut(() => MessagesController(messagesRepo: Get.find()));
+  Get.lazyPut(() => MapController(mapJsonRepo: Get.find()));
+  Get.lazyPut(() => NotificationController(notificationRepo: Get.find()));
+
 }

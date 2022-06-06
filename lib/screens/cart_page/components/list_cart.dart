@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:store_shoes_app/components/big_text.dart';
 import 'package:store_shoes_app/controller/order_controller.dart';
 import 'package:store_shoes_app/controller/shoes_controller.dart';
 import 'package:store_shoes_app/models/cart_model.dart';
@@ -47,6 +48,8 @@ class _ListCartState extends State<ListCart> {
 
     }else if(widget.page == "carthistory"){
       _cartList = Get.find<OrderController>().order[widget.index].orderItems!;
+      // dynamic cartlisttest = Get.find<CartController>().getItems;
+      // printTestObject(cartlisttest);
     }
 
 
@@ -55,26 +58,25 @@ class _ListCartState extends State<ListCart> {
   Widget build(BuildContext context) {
     return GetBuilder<CartController>(builder: (cartController) {
       if(widget.page == "cartpage"){
-        _cartList = cartController.getItems;
+        _cartList = Get.find<CartController>().getItems;
 
       }
       return _cartList.isNotEmpty?Padding(
         padding: const EdgeInsets.all(5),
         child: Column(
-          children: List.generate(
-            _cartList.length,
-                (index) =>
-                GestureDetector(
-                  onTap: (){
-                    if(widget.page == "cartpage"){
-                      Get.toNamed(RouteHelper.getShoesDetail(_cartList[index].product!.id!, "cartpage"));
-                    }
-                    if(widget.page == "carthistory"){
-                      Get.toNamed(RouteHelper.getShoesDetail(_cartList[index].productId!, "carthistory"));
-                    }
-                  },
-                    child: CartItem(page: widget.page,cartModel: _cartList[index])),
-          ),
+          children: [
+            widget.page == "carthistory"?BigText(text: "Địa Chỉ: "+ Get.find<OrderController>().order[widget.index].address!):Container(),
+            Column(
+              children: List.generate(
+                _cartList.length,
+                    (index) =>
+                    GestureDetector(
+                      onTap: (){
+                      },
+                        child: CartItem(page: widget.page,cartModel: _cartList[index])),
+              ),
+            ),
+          ],
         ),
       ):NoDataPage(text: "Your cart is empty");
     });

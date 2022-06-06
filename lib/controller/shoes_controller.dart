@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -54,8 +55,7 @@ class ShoesController extends GetxController{
     update();
   }
 
-  void updateWidget(){
-
+  void updateShoesController(){
     update();
   }
 
@@ -114,7 +114,24 @@ class ShoesController extends GetxController{
 
   }
 
+  Future<ResponseModel> deleteProduct(int idProduct) async{
+    Response response = await shoesRepo.deleteProduct(idProduct.toString());
+    late ResponseModel responseModel;
+    if(response.statusCode == 200)
+    {
+      responseModel = ResponseModel(true, "Success "+response.statusText!);
+    }
+    else{
+      responseModel = ResponseModel(false, "Error "+response.statusText!);
+    }
+    update();
+    return responseModel;
+
+  }
+
+
   Future<void> getShoesProductList() async{
+    _isLoaded = false;
     Response response = await shoesRepo.getShoesProductList();
     if(response.statusCode == 200)
       {
@@ -122,10 +139,14 @@ class ShoesController extends GetxController{
         _shoesProductList.addAll(Product.fromJson(response.body).products);
         _isLoaded = true;
         update();
-
+        setListFilterShoes();
       }
     else{
       print("get shoes product error");
+      // return await Future.delayed(const Duration(seconds: 20),(){
+      //   print("Reload get data product then duration 20 seconds SUCCESS");
+      //   getShoesProductList();
+      // });
     }
 
    /* _shoesProductList.forEach((element) {
@@ -134,6 +155,7 @@ class ShoesController extends GetxController{
       print(testList);
     }
     );*/
+    print("aaaaaaaaaaaa");
     update();
   }
   Future<void> getShoesTypeList() async{
@@ -142,7 +164,6 @@ class ShoesController extends GetxController{
     {
       _shoesTypeList = [];
       _shoesTypeList.addAll(ShoesType.fromJson(response.body).shoesType);
-      _isLoaded = true;
       update();
     }
     else{
@@ -153,18 +174,36 @@ class ShoesController extends GetxController{
 
   Future<void> searchShoesProduct(int index)async {
     _listFilterShoes = [];
-    _shoesProductList.forEach((element) {
-      if(element.typeId == index)
+      _shoesProductList.forEach((element) {
+        if(element.typeId == index)
         {
           _listFilterShoes.add(element);
+
         }
-    });
-    indexSelected = index;
+      });
+      indexSelected = index;
+
     update();
+  }
+
+   List<ProductsModel> getOtherProductList(int type){
+    List<ProductsModel> listOtherProduct = [];
+    _shoesProductList.forEach((element) {
+      if(element.typeId == type)
+      {
+        listOtherProduct.add(element);
+
+      }
+    });
+
+    return listOtherProduct;
   }
 
   void setListFilterShoes(){
     _listFilterShoes = [];
+    _shoesProductList.forEach((element) {
+        _listFilterShoes.add(element);
+    });
     indexSelected = 0;
     update();
   }
@@ -199,12 +238,12 @@ class ShoesController extends GetxController{
       return quantity;
     }
   }
-  void initProduct(ProductsModel product, CartController cart){
+  void initProduct(ProductsModel product, CartController cart,int size, String color){
     _quantity =0;
     _inCartItems = 0;
-    _optionColor = '0xFFFFFFFF';
-    _optionSize = 10;
     _cart = cart;
+    _optionColor = color;
+    _optionSize = size;
     var exist = false;
     exist = _cart.existInCart(product);
 
@@ -213,25 +252,20 @@ class ShoesController extends GetxController{
     int index = list.indexWhere((element) => element.id! == product.id!);
     if(exist){
       _inCartItems = _cart.getQuantity(product);
-      _optionColor = list[index].color!;
-      _optionSize = list[index].size!;
     }
     // print("the quantity in the cart is "+_inCartItems.toString());
   }
 
   void addItem(ProductsModel product){
-    _cart.addItem(product, _quantity);
+    _cart.addItem(product, _quantity,size: _optionSize,color: _optionColor);
     _quantity = 0;
     _inCartItems = _cart.getQuantity(product);
-    _cart.items.forEach((key, value) {
-      value.size = _optionSize;
-      value.color = _optionColor.toString();
-    });
     update();
   }
 
   int get totalItems{
-    return _cart.totalItems;
+    CartController cartController = Get.find<CartController>();
+    return cartController.totalItems;
   }
 
   List<CartModel> get getItems{

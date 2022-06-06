@@ -14,42 +14,64 @@ import 'category.dart';
 import 'popular_product.dart';
 import 'slider_banner.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  Future<void> getData()async {
     Get.find<ShoesController>().getShoesProductList();
     Get.find<ShoesController>().getShoesTypeList();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+
+
     return Scaffold(
-      body: GetBuilder<ShoesController>(
-        builder: (shoesController) {
-          // shoesController.getShoesProductList();
-          // shoesController.getShoesTypeList();
-          return SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(top: Dimensions.height30),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppBarHome(),
-                  SizedBox(
-                    height: Dimensions.height20,
-                  ),
-                  SliderBanner(),
-                  SizedBox(
-                    height: Dimensions.height10,
-                  ),
-                  Category(shoesType: shoesController.shoesTypeList, shoesController: shoesController,),
-                  SizedBox(
-                    height: Dimensions.height10,
-                  ),
-                  shoesController.isLoaded?PopularProducts(shoesProduct: shoesController.listFilterShoes.isEmpty?shoesController.shoesProductList:shoesController.listFilterShoes,):CustomLoader(),
-                ],
+      body: RefreshIndicator(
+        backgroundColor: Colors.yellow,
+        onRefresh: getData,
+        child: ListView(
+          children: [
+            GetBuilder<ShoesController>(
+          builder: (shoesController) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(top: Dimensions.height30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppBarHome(),
+                    SizedBox(
+                      height: Dimensions.height20,
+                    ),
+                    SliderBanner(),
+                    SizedBox(
+                      height: Dimensions.height10,
+                    ),
+                    Category(shoesType: shoesController.shoesTypeList, shoesController: shoesController,),
+                    SizedBox(
+                      height: Dimensions.height10,
+                    ),
+                    shoesController.isLoaded?PopularProducts(shoesProduct: shoesController.listFilterShoes,):CustomLoader(),
+                  ],
+                ),
               ),
-            ),
-          );
-        }
+            );
+          }
+        )
+          ],
+        ),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -14,20 +15,48 @@ import '../../routes/route_helper.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
   @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
+  var nameController = TextEditingController();
+  var phoneController = TextEditingController();
+  var singUpImage = [
+    "t.png",
+    "f.png",
+    "g.png",
+  ];
+
+  //showpassword
+  bool isShowVisibility = false;
+
+  //token_messgaes
+  String deviceTokenToSendPushNotification = "";
+
+
+  Future<void> getDeviceTokenToSendNotification() async {
+    final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+    final token = await _fcm.getToken();
+    deviceTokenToSendPushNotification = token.toString();
+    print("Token Value $deviceTokenToSendPushNotification");
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDeviceTokenToSendNotification();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var emailController = TextEditingController();
-    var passwordController = TextEditingController();
-    var nameController = TextEditingController();
-    var phoneController = TextEditingController();
-    var singUpImage = [
-      "t.png",
-      "f.png",
-      "g.png",
-    ];
+
 
     void _registration(AuthController authController) {
       String name = nameController.text.trim();
@@ -52,7 +81,7 @@ class SignUpPage extends StatelessWidget {
             title: "Password");
       } else {
         SignUpBody signUpBody = SignUpBody(
-            name: name, phone: phone, email: email, password: password);
+            name: name, phone: phone, email: email, password: password,tokenMessages: deviceTokenToSendPushNotification);
         authController.registration(signUpBody).then((status){
           if(status.isSuccess){
             print("Success registration");
@@ -100,7 +129,16 @@ class SignUpPage extends StatelessWidget {
                       height: Dimensions.height20,
                     ),
                     AppTextField(
-                      isObscure: true,
+                      suffixIcon:IconButton(
+                        onPressed: (){
+                          setState(() {
+                            isShowVisibility =!isShowVisibility;
+
+                          });
+                        },
+                        icon: isShowVisibility?const Icon(Icons.visibility_off):const Icon(Icons.visibility),
+                      ),
+                      isObscure: isShowVisibility,
                       textFieldController: passwordController,
                       hintText: "Password",
                       prefixIcon: Icons.password_sharp,

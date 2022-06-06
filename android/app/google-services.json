@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "167017645463",
+    "project_id": "smallshoesproject",
+    "storage_bucket": "smallshoesproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:167017645463:android:57e664d06de028d64a70d2",
+        "android_client_info": {
+          "package_name": "ml.leminhmy.newappname"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "167017645463-pav8ncpsr1sf03qiif8146le032rn75t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0IrOReNx5GoBwYLmYEHv0hq78BhDMd8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "167017645463-pav8ncpsr1sf03qiif8146le032rn75t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

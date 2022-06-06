@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:store_shoes_app/controller/shoes_controller.dart';
 import 'package:store_shoes_app/models/cart_model.dart';
 import 'package:store_shoes_app/models/product.dart';
-import 'package:store_shoes_app/screens/search_page/search_widget.dart';
+import 'package:store_shoes_app/components/search_widget.dart';
 
 import '../../components/big_text.dart';
 import '../../components/small_text.dart';
@@ -42,6 +42,7 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         centerTitle: true,
         title: SearchWidget(
+
           text: query,
           hintText: 'Search Name or SubTitle',
           onChanged: searchBook,

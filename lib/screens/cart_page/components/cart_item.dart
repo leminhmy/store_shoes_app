@@ -6,6 +6,7 @@ import '../../../components/big_text.dart';
 import '../../../components/small_text.dart';
 import '../../../controller/cart_controller.dart';
 import '../../../models/cart_model.dart';
+import '../../../routes/route_helper.dart';
 import '../../../utils/app_contants.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/dimensions.dart';
@@ -27,15 +28,25 @@ class CartItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           //image product
-          ClipRRect(
-              borderRadius: BorderRadius.all(
-                  Radius.circular(Dimensions.radius20)),
-              child: Image.network(
-                AppConstants.BASE_URL+AppConstants.UPLOAD_URL+cartModel.img!,
-                fit: BoxFit.cover,
-                height: Dimensions.pageViewTextContainer,
-                width: Dimensions.pageViewTextContainer,
-              )
+          GestureDetector(
+            onTap: (){
+              if(page == "cartpage"){
+                Get.toNamed(RouteHelper.getShoesDetail(cartModel.product!.id!, "cartpage"));
+              }
+              if(page == "carthistory"){
+                Get.toNamed(RouteHelper.getShoesDetail(cartModel.productId!, "carthistory"));
+              }
+            },
+            child: ClipRRect(
+                borderRadius: BorderRadius.all(
+                    Radius.circular(Dimensions.radius20)),
+                child: Image.network(
+                  AppConstants.BASE_URL+AppConstants.UPLOAD_URL+cartModel.img!,
+                  fit: BoxFit.cover,
+                  height: Dimensions.pageViewTextContainer,
+                  width: Dimensions.pageViewTextContainer,
+                )
+            ),
           ),
           //information product
           Expanded(
@@ -63,9 +74,9 @@ class CartItem extends StatelessWidget {
                     children: [
                       SmallText(text: "Color",color: Colors.black,),
                       SizedBox(width: Dimensions.height10,),
-                      Icon(Icons.circle,size: Dimensions.iconSize26,color: Color(int.parse(cartModel.color==null?"0xFF000000":cartModel.color!)),),
+                      Icon(Icons.circle,size: Dimensions.iconSize26,color: Color(int.parse(cartModel.color!)),),
                       SizedBox(width: Dimensions.height20,),
-                      SmallText(text: "Size: ${cartModel.size==null?"10":cartModel.size.toString()}",color: Colors.black,),
+                      SmallText(text: "Size: ${cartModel.size.toString()}",color: Colors.black,),
                     ],
                   ),
                   SizedBox(height: Dimensions.height5,),
@@ -83,7 +94,7 @@ class CartItem extends StatelessWidget {
                                 InkWell(
                                   onTap: () {
                                     if(page == "cartpage"){
-                                      cartController.addItem(cartModel.product!, -1);
+                                      cartController.addItem(cartModel.product!, -1,color: cartModel.color!,size: cartModel.size!);
                                     }else{
                                       showCustomSnackBar("Thís is HistoryCart, can't set it");
                                     }
@@ -103,7 +114,7 @@ class CartItem extends StatelessWidget {
                                 InkWell(
                                   onTap: () {
                                     if(page == "cartpage"){
-                                      cartController.addItem(cartModel.product!, 1);
+                                      cartController.addItem(cartModel.product!, 1,color: cartModel.color!,size: cartModel.size!);
                                     }else{
                                       showCustomSnackBar("Thís is HistoryCart, can't set it");
                                     }
