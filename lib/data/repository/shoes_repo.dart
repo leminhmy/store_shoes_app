@@ -14,7 +14,7 @@ class ShoesRepo extends GetxService{
   }
 
   Future<Response> deleteImg(int idProduct,String nameImg)async {
-    return await apiClient.deleteData(AppConstants.PRODUCT_DELETE_URL+"/"+idProduct.toString()+"/img/"+nameImg);
+    return await apiClient.postData(AppConstants.PRODUCT_DELETE_URL+"/"+idProduct.toString()+"/img/"+nameImg,{});
   }
 
   Future<Response> deleteProduct(String idProduct)async {

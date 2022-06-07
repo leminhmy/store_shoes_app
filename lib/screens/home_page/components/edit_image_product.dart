@@ -9,6 +9,7 @@ import '../../../components/big_text.dart';
 import '../../../components/button_border_radius.dart';
 import '../../../components/icon_background_border_radius.dart';
 import '../../../controller/shoes_controller.dart';
+import '../../../data/api/api_client.dart';
 import '../../../utils/app_contants.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/dimensions.dart';
@@ -94,51 +95,81 @@ class _EditImageProductState extends State<EditImageProduct> {
 
                                           showDialog(
                                               context: context,
-                                              builder: (context) => AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(
-                                                      Dimensions.radius10),
-                                                ),
-                                                title: Row(
-                                                  children: const [
-                                                    Icon(
-                                                      Icons.warning_amber_rounded,
-                                                      color: Colors.yellow,
-                                                    ),
-                                                    Text("Warning"),
-                                                  ],
-                                                ),
-                                                content: Text("You want delete it!"),
-                                                actions: [
-                                                  TextButton(
-                                                      onPressed: () async{
-                                                        await shoesController.deleteImg(widget.shoesProduct[widget.index].id,listImgApi[i].toString()).then((status){
-                                                          if(status.isSuccess)
-                                                          {
-                                                            showCustomSnackBar("Update Img Success",isError: false);
-                                                            listImgApi.removeAt(i);
-                                                            shoesController.getShoesProductList();
-                                                            setState(() {
+                                              builder: (BuildContext contextDialog)
 
-                                                            });
-                                                          }
-                                                          else{
-                                                            print("Error" + status.message);
-                                                            showCustomSnackBar("Error delete Img",);
-                                                          }
-
-                                                        });
-                                                        Navigator.pop(context);
-
-                                                      },
-                                                      child: Text("Delete")),
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text("Cancel")),
-                                                ],
-                                              ));
+                                              {
+                                                      return AlertDialog(
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                  Dimensions
+                                                                      .radius10),
+                                                        ),
+                                                        title: Row(
+                                                          children: const [
+                                                            Icon(
+                                                              Icons
+                                                                  .warning_amber_rounded,
+                                                              color:
+                                                                  Colors.yellow,
+                                                            ),
+                                                            Text("Warning"),
+                                                          ],
+                                                        ),
+                                                        content: Text(
+                                                            "You want delete it!"),
+                                                        actions: [
+                                                          TextButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                await shoesController
+                                                                    .deleteImg(
+                                                                        widget
+                                                                            .shoesProduct[widget
+                                                                                .index]
+                                                                            .id,
+                                                                        listImgApi[i]
+                                                                            .toString())
+                                                                    .then(
+                                                                        (status) {
+                                                                  if (status
+                                                                      .isSuccess) {
+                                                                    listImgApi
+                                                                        .removeAt(
+                                                                            i);
+                                                                    showCustomSnackBar(
+                                                                        "Update Img Success",
+                                                                        isError:
+                                                                            false);
+                                                                    shoesController
+                                                                        .getShoesProductList();
+                                                                    setState(
+                                                                        () {});
+                                                                  } else {
+                                                                    print("Error" +
+                                                                        status
+                                                                            .message);
+                                                                    showCustomSnackBar(
+                                                                      "Error delete Img",
+                                                                    );
+                                                                  }
+                                                                });
+                                                                Navigator.pop(
+                                                                    contextDialog);
+                                                              },
+                                                              child: Text(
+                                                                  "Delete")),
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    contextDialog);
+                                                              },
+                                                              child: Text(
+                                                                  "Cancel")),
+                                                        ],
+                                                      );
+                                                    });
 
 
                                     })),
@@ -208,7 +239,7 @@ class _EditImageProductState extends State<EditImageProduct> {
                             GestureDetector(
                                 onTap: ()async{
                                   if(_imageList!.isNotEmpty){
-                                    await uploadFileImg(widget.shoesProduct[widget.index].id,context);
+                                    await uploadFileImg(widget.shoesProduct[widget.index].id!,context);
                                   }else{
                                     showCustomSnackBar("List Image min = 1");
                                   }
@@ -244,7 +275,7 @@ class _EditImageProductState extends State<EditImageProduct> {
     });
   }
 
-  uploadFileImg(int index,BuildContext context) async {
+  uploadFileImg(int idProduct,BuildContext context) async {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -260,6 +291,7 @@ class _EditImageProductState extends State<EditImageProduct> {
         });
 
     var postUri = Uri.parse(AppConstants.BASE_URL+AppConstants.UPLOAD_FILE_URI);
+
     http.MultipartRequest request = http.MultipartRequest("POST", postUri);
 
     List<http.MultipartFile> listMultipartFile = [];
@@ -269,9 +301,10 @@ class _EditImageProductState extends State<EditImageProduct> {
 
       listMultipartFile.add(multipartFile);
     }
-    request.fields['id'] = index.toString();
+    request.fields['id'] = idProduct.toString();
     request.files.addAll(listMultipartFile);
-
+    ApiClient apiClient = ApiClient(appBaseUrl: AppConstants.BASE_URL,sharedPreferences: Get.find());
+    request.headers.addAll(apiClient.mainHeaders);
     http.StreamedResponse response = await request.send();
 
 
